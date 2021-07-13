@@ -1,17 +1,20 @@
-name: "UC_CD73_210707"
+name: UC_CD73_210707
 output_dir: ../docs
 navbar:
-  title: "UC_CD73_210707"
+  title: UC_CD73_210707
   left:
   - text: Home
     href: index.html
-  - text: About
-    href: about.html
-  - text: License
-    href: license.html
+  right:
+  - icon: fa-github
+    text: Source code
+    href: https://github.com/FabioBedin/UC_CD73_210707
 output:
   workflowr::wflow_html:
     toc: yes
     toc_float: yes
     theme: cosmo
     highlight: textmate
+    code_folding: hide
+    fig_caption: yes
+    df_print: paged
