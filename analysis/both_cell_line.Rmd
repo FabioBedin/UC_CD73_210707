@@ -1,0 +1,570 @@
+---
+title: "CD73 OverExpression in OV90 and OVCAR cell lines"
+author: "Fabio Bedin | MS-Unit"
+output: html_document
+---
+
+
+```{r librerie, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(fig.align = "center", warning=FALSE, message=FALSE, fig.height=8, fig.width=8)
+library("MBQN")
+library("dplyr")
+library("tidyr")
+library("DEP")
+library("SummarizedExperiment")
+library("preprocessCore")
+library("tibble")
+library("ggplot2")
+library("enrichR")
+library("DT")
+library("stringr")
+library("patchwork")
+library("here")
+library("datapasta")
+library("ggstatsplot")
+library("UpSetR")
+library("ggrepel")
+library("visdat")
+library("naniar")
+library("gprofiler2")
+library("openxlsx")
+```
+
+```{r Custom Functions}
+source(here::here("code/custom_functions.R"))
+```
+
+```{r data}
+data <- read.csv(here::here("data/proteinGroups_UC_CD73.txt"), header = TRUE,stringsAsFactors = FALSE, sep = "\t")
+
+data <- data[data$Reverse != "+" & data$Potential.contaminant != "+" & data$Only.identified.by.site != "+" & data$Peptides >= 2,]
+
+data_unique <- make_unique(data, "Gene.names", "Protein.IDs", delim = ";")
+
+```
+
+# **Introduction**
+
+In this analysis we compare **OVCAR** and **OV90** cell lines, with or without overexpression of **CD73**.
+
+```{r expdes}
+expdesign <- read.table(here::here("data/experimentalDesignTemplate.txt"), header = T, stringsAsFactors = F)
+
+columns<-match(paste("LFQ.intensity.",expdesign$label,sep=""),colnames(data_unique))
+
+data_se <- make_se(data_unique, columns, expdesign)
+
+data_filt <- filter_missval(data_se, thr = 1)
+```
+
+Fist we generate some informative prols:
+
+## **Proteins per samples**
+
+This plot show the number of proteins identify in each samples:
+
+```{r proteins, fig.height=12, fig.width=15}
+plot_numbers_lables(data_se, b_size = 18, lab_size = 7)
+```
+
+## **Upset plot** {.tabset .tabset-fade}
+
+With this plot we can identify the numper of prteins in common within the 2 cell lines:
+
+### OVCAR
+
+```{r upset_1, fig.height=12, fig.width=15}
+define_set <- assay(data_filt) %>%  as.data.frame() %>% select(starts_with("OVCAR")) %>% colnames()
+
+assay(data_filt) %>% 
+  as.data.frame() %>% 
+  select(starts_with("OVCAR")) %>% 
+  rownames_to_column() %>% 
+  pivot_longer(!rowname, names_to = "samples", values_to = "intensity") %>% 
+  mutate(intensity = if_else(is.na(intensity), 0, 1)) %>% 
+  pivot_wider(names_from = samples, values_from = intensity) %>% 
+  as.data.frame() %>% 
+  upset(nsets = 8,
+        sets = define_set,
+        #order.by = "degree",
+        order.by = "freq",
+        keep.order = T,
+        text.scale = 2.5,
+        point.size = 4,
+        line.size = 0.5, 
+        sets.bar.color = rep(c("coral2", "turquoise3"), each = 4),
+        main.bar.color  = "gray44")
+  
+```
+
+### OV90
+
+```{r upset_2, fig.height=12, fig.width=15}
+define_set <- assay(data_filt) %>%  as.data.frame() %>% select(starts_with("OV90")) %>% colnames()
+
+assay(data_filt) %>% 
+  as.data.frame() %>% 
+  select(starts_with("OV90")) %>% 
+  rownames_to_column() %>% 
+  pivot_longer(!rowname, names_to = "samples", values_to = "intensity") %>% 
+  mutate(intensity = if_else(is.na(intensity), 0, 1)) %>% 
+  pivot_wider(names_from = samples, values_from = intensity) %>% 
+  as.data.frame() %>% 
+  upset(nsets = 8,
+        sets = define_set,
+        #order.by = "degree",
+        order.by = "freq",
+        keep.order = T,
+        text.scale = 2.5,
+        point.size = 4,
+        line.size = 0.5, 
+        sets.bar.color = rep(c("coral2", "turquoise3"), each = 4),
+        main.bar.color  = "gray44")
+  
+```
+
+### Both cell lines
+
+```{r upset_3, fig.height=12, fig.width=15}
+define_set <- assay(data_filt) %>% colnames()
+
+assay(data_filt) %>% 
+  as.data.frame() %>% 
+  rownames_to_column() %>% 
+  pivot_longer(!rowname, names_to = "samples", values_to = "intensity") %>% 
+  mutate(intensity = if_else(is.na(intensity), 0, 1)) %>% 
+  pivot_wider(names_from = samples, values_from = intensity) %>% 
+  as.data.frame() %>% 
+  upset(nsets = 16,
+        sets = define_set,
+        #order.by = "degree",
+        order.by = "freq",
+        keep.order = T,
+        text.scale = 2.5,
+        point.size = 4,
+        line.size = 0.5, 
+        sets.bar.color = rep(c("salmon1", "red3", "turquoise3", "royalblue1"), each = 4),
+        main.bar.color  = "gray44")
+  
+```
+
+## **Differential enrichment analysis** {.tabset .tabset-fade}
+
+Since we have 4 replicates per condition, we decided to filter the data for at least 3 out of 4 valid values in each condition.
+
+```{r diff_2}
+test <- c("OV90_CD73_vs_OV90_WT", "OVCAR_CD73_vs_OVCAR_WT")
+
+data_diff <- test_diff_BH(data_filt, type = "manual", test = test)
+
+dep <- add_rejections(data_diff, alpha = 0.05, lfc = 1)
+
+results<-get_results(dep)
+```
+
+### PCA plot
+
+```{r PCA_2}
+plot_pca(dep, x = 1, y = 2, n = 500, point_size = 4, indicate = "condition")
+```
+
+### Volcano plot {.tabset .tabset-fade}
+
+#### OVCAR
+
+```{r ovcar_analysis}
+expdesign <- read.table(here::here("data/experimentalDesignTemplate.txt"), header = T, stringsAsFactors = F)
+
+conditions_CAR<-c("OVCAR_WT", "OVCAR_CD73")
+
+expdesign <- subset(expdesign, condition %in% conditions_CAR)
+
+columns<-match(paste("LFQ.intensity.",expdesign$label,sep=""),colnames(data_unique))
+
+data_se_CAR <- make_se(data_unique, columns, expdesign)
+
+data_filt <- filter_by_grouping(data_se_CAR, thr = 1)
+
+test_CAR <- "OVCAR_CD73_vs_OVCAR_WT"
+
+data_diff <- test_diff_BH(data_filt, type = "manual", test = test_CAR)
+
+dep <- add_rejections(data_diff, alpha = 0.05, lfc = 1)
+
+results_CAR<-get_results(dep)
+
+plot_volcano(dep, contrast=test_CAR, add_names=T,label_size=5,adjusted = F)
+
+results_DEP_OVCAR <- get_df_wide(dep) %>% 
+  select(c(1:10,  Protein.names, starts_with("OVCAR"), -ends_with(c("CI.R", "CI.L")))) %>% 
+  relocate(name, Protein.IDs, Protein.names) 
+```
+
+#### OV90
+
+```{r ov90_analysis}
+expdesign <- read.table(here::here("data/experimentalDesignTemplate.txt"), header = T, stringsAsFactors = F)
+
+conditions_90<-c("OV90_WT", "OV90_CD73")
+
+expdesign <- subset(expdesign, condition %in% conditions_90)
+
+columns<-match(paste("LFQ.intensity.",expdesign$label,sep=""),colnames(data_unique))
+
+data_se_90 <- make_se(data_unique, columns, expdesign)
+
+data_filt <- filter_by_grouping(data_se_90, thr = 1)
+
+test_90 <- "OV90_CD73_vs_OV90_WT"
+
+data_diff <- test_diff_BH(data_filt, type = "manual", test = test_90)
+
+dep <- add_rejections(data_diff, alpha = 0.05, lfc = 1)
+
+results_90<-get_results(dep)
+
+plot_volcano(dep, contrast=test_90, add_names=T,label_size=5,adjusted = F)
+
+results_DEP_OV90 <- get_df_wide(dep) %>% 
+  select(c(1:10,  Protein.names, starts_with("OV90"), -ends_with(c("CI.R", "CI.L")))) %>% 
+  relocate(name, Protein.IDs, Protein.names)
+```
+
+### Results table {.tabset .tabset-fade}
+
+In this interactive table are summarized the restults:
+
+#### OVCAR
+
+```{r result_car}
+results_CAR %>% 
+  select(starts_with("name") | starts_with(test_CAR)) %>% 
+  filter(across(ends_with("significant"))) %>% 
+  arrange(across(ends_with("p.adj"))) %>%
+  mutate(across(2:3, format, scientific = T, digits = 2)) %>%
+  dplyr::rename_with(~ tolower(gsub(paste0(test_CAR,"_"), "", .x)), .cols = starts_with(test_CAR)) %>% 
+  mutate(significant = str_to_title(significant)) %>%
+  dplyr::rename(FC = ratio) %>% 
+  DT::datatable(options = list(
+  columnDefs = list(list(className = 'dt-center', targets = 1:5)),
+  pageLength = 10)) %>%
+  formatStyle('FC', backgroundColor = styleInterval(c(-1, 1), c('lightblue', 'white', 'tomato'))) %>% 
+  formatStyle('significant', color = styleEqual(c("True", "False"), c('green', 'red')))
+```
+
+#### OV90
+
+```{r result_90}
+results_90 %>% 
+  select(starts_with("name") | starts_with(test_90)) %>% 
+  filter(across(ends_with("significant"))) %>% 
+  arrange(across(ends_with("p.adj"))) %>%
+  mutate(across(2:3, format, scientific = T, digits = 2)) %>%
+  dplyr::rename_with(~ tolower(gsub(paste0(test_90,"_"), "", .x)), .cols = starts_with(test_90)) %>% 
+  mutate(significant = str_to_title(significant)) %>%
+  dplyr::rename(FC = ratio) %>% 
+  DT::datatable(options = list(
+  columnDefs = list(list(className = 'dt-center', targets = 1:5)),
+  pageLength = 10)) %>%
+  formatStyle('FC', backgroundColor = styleInterval(c(-1, 1), c('lightblue', 'white', 'tomato'))) %>% 
+  formatStyle('significant', color = styleEqual(c("True", "False"), c('green', 'red')))
+```
+
+#### Common DEP
+
+```{r table_common}
+results <- merge(results_CAR, results_90, by.x="ID", by.y="ID", all.x = TRUE, all.y = TRUE)
+
+results %>% 
+  mutate(name = case_when(is.na(name.x) ~ name.y, TRUE ~ name.x)) %>% 
+  mutate(significant.x = case_when(is.na(significant.x) ~ FALSE, TRUE ~ significant.x)) %>% 
+  mutate(significant.y = case_when(is.na(significant.y) ~ FALSE, TRUE ~ significant.y)) %>% 
+  mutate(significant = if_else(significant.x & significant.y, TRUE, FALSE)) %>% 
+  filter(significant) %>%
+  select(-significant, -ends_with("centered"), -contains(c(".x", ".y"))) %>% 
+  pivot_longer(
+   cols = ends_with(c("p.val", "p.adj", "significant", "ratio")),
+   names_to = c("comparison", ".value"),
+   names_pattern = "(.*_.*_.*_.*_.*)_(.*)") %>% 
+  arrange(name, p.adj) %>% 
+  relocate(comparison, name) %>% 
+  mutate(across(ends_with(c("p.val", "p.adj")), format, scientific = T, digits = 2)) %>% 
+  mutate(significant = str_to_title(significant)) %>%
+  dplyr::rename(FC = ratio) %>% 
+  drop_na() %>%
+  DT::datatable(options = list(
+  columnDefs = list(list(className = 'dt-center', targets = 1:7)),
+  pageLength = 10)) %>%
+  formatStyle('FC', backgroundColor = styleInterval(c(-1, 1), c('lightblue', 'white', 'tomato'))) %>% 
+  formatStyle('significant', color = styleEqual(c("True", "False"), c('green', 'red')))
+```
+
+## **Unique Proteins** {.tabset .tabset-fade}
+
+### OVCAR
+
+```{r unique_car}
+data_filt_CAR <- filter_missval(data_se_CAR, thr = 1)
+
+unique_1 <- assay(data_filt_CAR) %>% 
+  as.data.frame() %>% 
+  select(starts_with(conditions_CAR[1])) %>%
+  rownames_to_column() %>% 
+  pivot_longer(!rowname, names_to = "samples", values_to = "intensity") %>% 
+  mutate(intensity = case_when(is.na(intensity) ~ 0, TRUE ~ as.numeric(1))) %>%
+  group_by(rowname) %>% 
+  mutate(unique = if_else(sum(intensity) == 0, T, F)) %>% 
+  ungroup() %>% 
+  filter(unique) %>% 
+  pull(rowname) %>%
+  unique()
+  
+unique_2 <- assay(data_filt_CAR) %>% 
+  as.data.frame() %>% 
+  select(starts_with(conditions_CAR[2])) %>%
+  rownames_to_column() %>% 
+  pivot_longer(!rowname, names_to = "samples", values_to = "intensity") %>% 
+  mutate(intensity = case_when(is.na(intensity) ~ 0, TRUE ~ as.numeric(1))) %>%
+  group_by(rowname) %>% 
+  mutate(unique = if_else(sum(intensity) == 0, T, F)) %>% 
+  ungroup() %>% 
+  filter(unique) %>% 
+  pull(rowname) %>%
+  unique()
+
+table_unique_CAR <- assay(data_filt_CAR) %>% 
+  as.data.frame() %>% 
+  rownames_to_column() %>% 
+  mutate(!!paste0("unique_", conditions_CAR[2]) := rowname %in% unique_1) %>% 
+  mutate(!!paste0("unique_", conditions_CAR[1]) := rowname %in% unique_2) %>% 
+  filter(get(paste0("unique_", conditions_CAR[1])) | get(paste0("unique_", conditions_CAR[2]))) %>% 
+  relocate(where(is.logical), .after = where(is.character)) %>% 
+  dplyr::rename(name = rowname)
+
+table_unique_CAR %>% 
+  select(1:3) %>%
+  DT::datatable(options = list(
+  columnDefs = list(list(className = 'dt-center', targets = 1:3)),
+  pageLength = 10)) %>%
+  formatStyle('unique_OVCAR_CD73', color = styleEqual(c(TRUE, FALSE), c('green', 'red'))) %>% 
+  formatStyle('unique_OVCAR_WT', color = styleEqual(c(TRUE, FALSE), c('green', 'red')))
+
+result_unique_OVCAR <- get_df_wide(data_filt_CAR) %>% 
+  select(c(name, Protein.IDs, Protein.names)) %>% 
+  right_join(table_unique_CAR) 
+```
+
+### OV90
+
+```{r unique_90}
+data_filt_90 <- filter_missval(data_se_90, thr = 1)
+
+unique_1 <- assay(data_filt_90) %>% 
+  as.data.frame() %>% 
+  select(starts_with(conditions_90[1])) %>%
+  rownames_to_column() %>% 
+  pivot_longer(!rowname, names_to = "samples", values_to = "intensity") %>% 
+  mutate(intensity = case_when(is.na(intensity) ~ 0, TRUE ~ as.numeric(1))) %>%
+  group_by(rowname) %>% 
+  mutate(unique = if_else(sum(intensity) == 0, T, F)) %>% 
+  ungroup() %>% 
+  filter(unique) %>% 
+  pull(rowname) %>%
+  unique()
+  
+unique_2 <- assay(data_filt_90) %>% 
+  as.data.frame() %>% 
+  select(starts_with(conditions_90[2])) %>%
+  rownames_to_column() %>% 
+  pivot_longer(!rowname, names_to = "samples", values_to = "intensity") %>% 
+  mutate(intensity = case_when(is.na(intensity) ~ 0, TRUE ~ as.numeric(1))) %>%
+  group_by(rowname) %>% 
+  mutate(unique = if_else(sum(intensity) == 0, T, F)) %>% 
+  ungroup() %>% 
+  filter(unique) %>% 
+  pull(rowname) %>%
+  unique()
+
+table_unique_90 <- assay(data_filt_90) %>% 
+  as.data.frame() %>% 
+  rownames_to_column() %>% 
+  mutate(!!paste0("unique_", conditions_90[2]) := rowname %in% unique_1) %>% 
+  mutate(!!paste0("unique_", conditions_90[1]) := rowname %in% unique_2) %>% 
+  filter(get(paste0("unique_", conditions_90[1])) | get(paste0("unique_", conditions_90[2]))) %>% 
+  relocate(where(is.logical), .after = where(is.character)) %>% 
+  dplyr::rename(name = rowname)
+
+table_unique_90 %>% 
+  select(1:3) %>%
+  DT::datatable(options = list(
+  columnDefs = list(list(className = 'dt-center', targets = 1:3)),
+  pageLength = 10)) %>%
+  formatStyle('unique_OV90_CD73', color = styleEqual(c(TRUE, FALSE), c('green', 'red'))) %>% 
+  formatStyle('unique_OV90_WT', color = styleEqual(c(TRUE, FALSE), c('green', 'red')))
+
+result_unique_OV90 <- get_df_wide(data_filt_90) %>% 
+  select(c(name, Protein.IDs, Protein.names)) %>% 
+  right_join(table_unique_90)
+```
+
+
+## **Gene Ontology** {.tabset .tabset-fade}
+
+Then we perfom a gene onology analysis (GO or by branch GO:MF, GO:BP, GO:CC) and a KEGG ontology.
+
+The enrichment results are visualized with an interactive **Manhattan-like-plot**:
+
+### OVCAR {.tabset .tabset-fade}
+
+#### CD73 
+
+```{r GO_car_cd73}
+Gname <- results_CAR %>% filter(significant & get(paste0(test_CAR, "_ratio")) > 0) %>% pull(name)
+
+Uni <- table_unique_CAR %>% filter(unique_OVCAR_CD73) %>% pull(name) %>% unique()
+
+#bg_list <- results_CAR %>% pull(name) %>% unique()
+
+GO_name <- c(Gname, Uni)
+
+GO <- gost(query = GO_name, organism = "hsapiens", sources = c("GO:BP", "GO:MF", "GO:CC", "KEGG"), ordered_query = T)
+
+gostplot(GO, capped = TRUE, interactive = TRUE)
+```
+
+The results can also be visualized with a table: 
+
+```{r tab_car_cd73}
+GO$result %>% 
+  as.data.frame() %>% 
+  select(starts_with(c("source", "term_name", "p_value", "term_size", "intersection_size"))) %>% 
+  arrange(p_value) %>%  
+  mutate(p_value = format(p_value, scientific = T, digits = 2)) %>% 
+  DT::datatable(options = list(
+  columnDefs = list(list(className = 'dt-center', targets = 1:6)),
+  pageLength = 10)) %>%
+  formatStyle('source', backgroundColor = styleEqual(c("GO:BP", "GO:MF", "GO:CC", "KEGG"), c('orange', 'tomato', 'lightgreen', 'violet')))
+```
+
+#### WT
+
+```{r GO_car_wt}
+Gname <- results_CAR %>% filter(significant & get(paste0(test_CAR, "_ratio")) < 0) %>% pull(name)
+
+Uni <- table_unique_CAR %>% filter(unique_OVCAR_WT) %>% pull(name)
+
+#bg_list <- results_CAR %>% pull(name) %>% unique()
+
+GO_name <- c(Gname, Uni)
+
+GO <- gost(query = GO_name, organism = "hsapiens", sources = c("GO:BP", "GO:MF", "GO:CC", "KEGG"), ordered_query = T)
+
+gostplot(GO, capped = TRUE, interactive = TRUE)
+```
+
+The results can also be visualized with a table:
+
+```{r tab_car_wt}
+GO$result %>% 
+  as.data.frame() %>% 
+  select(starts_with(c("source", "term_name", "p_value", "term_size", "intersection_size"))) %>% 
+  arrange(p_value) %>%  
+  mutate(p_value = format(p_value, scientific = T, digits = 2)) %>% 
+  DT::datatable(options = list(
+  columnDefs = list(list(className = 'dt-center', targets = 1:6)),
+  pageLength = 10)) %>%
+  formatStyle('source', backgroundColor = styleEqual(c("GO:BP", "GO:MF", "GO:CC", "KEGG"), c('orange', 'tomato', 'lightgreen', 'violet')))
+```
+
+
+### OV90 {.tabset .tabset-fade}
+
+#### CD73 
+
+```{r GO_90_cd73}
+Gname <- results_90 %>% filter(significant & get(paste0(test_90, "_ratio")) > 0) %>% pull(name)
+
+Uni <- table_unique_90 %>% filter(unique_OV90_CD73) %>% pull(name)
+
+#bg_list <- results_90 %>% pull(name) %>% unique()
+
+GO_name <- c(Gname, Uni)
+
+GO <- gost(query = GO_name, organism = "hsapiens", sources = c("GO:BP", "GO:MF", "GO:CC", "KEGG"), ordered_query = T)
+
+gostplot(GO, capped = TRUE, interactive = TRUE)
+```
+
+The results can also be visualized with a table: 
+
+```{r tab_90_cd73}
+GO$result %>% 
+  as.data.frame() %>% 
+  select(starts_with(c("source", "term_name", "p_value", "term_size", "intersection_size"))) %>% 
+  arrange(p_value) %>%  
+  mutate(p_value = format(p_value, scientific = T, digits = 2)) %>% 
+  DT::datatable(options = list(
+  columnDefs = list(list(className = 'dt-center', targets = 1:6)),
+  pageLength = 10)) %>%
+  formatStyle('source', backgroundColor = styleEqual(c("GO:BP", "GO:MF", "GO:CC", "KEGG"), c('orange', 'tomato', 'lightgreen', 'violet')))
+```
+
+#### WT
+
+```{r GO_90_wt}
+Gname <- results_90 %>% filter(significant & get(paste0(test_90, "_ratio")) < 0) %>% pull(name)
+
+Uni <- table_unique_90 %>% filter(unique_OV90_WT) %>% pull(name)
+
+#bg_list <- results_90 %>% pull(name) %>% unique()
+
+GO_name <- c(Gname, Uni)
+
+GO <- gost(query = GO_name, organism = "hsapiens", sources = c("GO:BP", "GO:MF", "GO:CC", "KEGG"), ordered_query = T)
+
+gostplot(GO, capped = TRUE, interactive = TRUE)
+```
+
+The results can also be visualized with a table:
+
+```{r tab_90_wt}
+GO$result %>% 
+  as.data.frame() %>% 
+  select(starts_with(c("source", "term_name", "p_value", "term_size", "intersection_size"))) %>% 
+  arrange(p_value) %>%  
+  mutate(p_value = format(p_value, scientific = T, digits = 2)) %>% 
+  DT::datatable(options = list(
+  columnDefs = list(list(className = 'dt-center', targets = 1:6)),
+  pageLength = 10)) %>%
+  formatStyle('source', backgroundColor = styleEqual(c("GO:BP", "GO:MF", "GO:CC", "KEGG"), c('orange', 'tomato', 'lightgreen', 'violet')))
+```
+
+
+## {-}
+
+
+```{r}
+#final_table <- get_df_wide(dep)
+#write.table(final_table, file = "results_table.txt", quote = F, sep = "\t", row.names = F, col.names = T)
+
+excel <- createWorkbook()
+
+addWorksheet(excel, sheetName = "ProteinGroups_OVCAR")
+
+writeDataTable(excel, sheet = "ProteinGroups_OVCAR", x = results_DEP_OVCAR)
+
+addWorksheet(excel, sheetName = "Unique_OVCAR")
+
+writeDataTable(excel, sheet = "Unique_OVCAR", x = result_unique_OVCAR)
+
+addWorksheet(excel, sheetName = "ProteinGroups_OV90")
+
+writeDataTable(excel, sheet = "ProteinGroups_OV90", x = results_DEP_OV90)
+
+addWorksheet(excel, sheetName = "Unique_OV90")
+
+writeDataTable(excel, sheet = "Unique_OV90", x = result_unique_OV90)
+
+saveWorkbook(excel, here::here("output/results_UC_CD73_210709.xlsx"), overwrite = T)
+```
+
