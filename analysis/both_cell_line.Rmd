@@ -28,6 +28,9 @@ library("visdat")
 library("naniar")
 library("gprofiler2")
 library("openxlsx")
+library("org.Hs.eg.db")
+library("rrvgo")
+select <- dplyr::select
 ```
 
 ```{r Custom Functions}
@@ -432,6 +435,8 @@ GO <- gost(query = GO_name, organism = "hsapiens", sources = c("GO:BP", "GO:MF",
 gostplot(GO, capped = TRUE, interactive = TRUE)
 ```
 
+#### Table CD73
+
 The results can also be visualized with a table: 
 
 ```{r tab_car_cd73}
@@ -445,6 +450,26 @@ GO$result %>%
   pageLength = 10)) %>%
   formatStyle('source', backgroundColor = styleEqual(c("GO:BP", "GO:MF", "GO:CC", "KEGG"), c('orange', 'tomato', 'lightgreen', 'violet')))
 ```
+
+#### Reduced Terms CD73
+
+```{r}
+simMatrix <- GO$result %>% 
+  as.data.frame() %>%
+  filter(source == "GO:BP") %>% 
+  pull(term_id) %>% 
+  calculateSimMatrix(orgdb="org.Hs.eg.db", ont="BP", method="Rel")
+
+scores <- setNames(-log10(GO$result$p_value), GO$result$term_id)
+
+reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Hs.eg.db")
+
+treemapPlot(reducedTerms)
+```
+
 
 #### WT
 
@@ -462,6 +487,8 @@ GO <- gost(query = GO_name, organism = "hsapiens", sources = c("GO:BP", "GO:MF",
 gostplot(GO, capped = TRUE, interactive = TRUE)
 ```
 
+#### table WT
+
 The results can also be visualized with a table:
 
 ```{r tab_car_wt}
@@ -475,6 +502,26 @@ GO$result %>%
   pageLength = 10)) %>%
   formatStyle('source', backgroundColor = styleEqual(c("GO:BP", "GO:MF", "GO:CC", "KEGG"), c('orange', 'tomato', 'lightgreen', 'violet')))
 ```
+
+#### Reduced Terms WT
+
+```{r}
+simMatrix <- GO$result %>% 
+  as.data.frame() %>%
+  filter(source == "GO:BP") %>% 
+  pull(term_id) %>% 
+  calculateSimMatrix(orgdb="org.Hs.eg.db", ont="BP", method="Rel")
+
+scores <- setNames(-log10(GO$result$p_value), GO$result$term_id)
+
+reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Hs.eg.db")
+
+treemapPlot(reducedTerms)
+```
+
 
 
 ### OV90 {.tabset .tabset-fade}
