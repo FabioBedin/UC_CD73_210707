@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Fabio Bedin | MS-Unit at IEO" />
+
+
+<title>LFQ_Analysis</title>
+
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.18/datatables.js"></script>
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<script src="site_libs/plotly-binding-4.9.4.1/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-1.57.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-1.57.1/plotly-latest.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">UC_CD73_210707</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/FabioBedin/UC_CD73_210707">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">LFQ_Analysis</h1>
+<h4 class="author">Fabio Bedin | MS-Unit at IEO</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-09-28
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>UC_CD73_210707/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20210707code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20210707)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20210707code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20210707)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomFabioBedinUCCD73210707tree1ab726ab857aaf734d6fd5e363709251fc649700targetblank1ab726aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/FabioBedin/UC_CD73_210707/tree/1ab726ab857aaf734d6fd5e363709251fc649700" target="_blank">1ab726a</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomFabioBedinUCCD73210707tree1ab726ab857aaf734d6fd5e363709251fc649700targetblank1ab726aa" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/FabioBedin/UC_CD73_210707/tree/1ab726ab857aaf734d6fd5e363709251fc649700" target="_blank">1ab726a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  analysis/OV90.Rmd
+    Untracked:  analysis/OVCAR.Rmd
+    Untracked:  code/custom_functions.R
+    Untracked:  data/expdesign_sph_OV90.txt
+    Untracked:  data/expdesign_sph_OVCAR.txt
+    Untracked:  data/experimentalDesignTemplate.txt
+    Untracked:  data/proteinGroups_Sphere_OV90.txt
+    Untracked:  data/proteinGroups_Sphere_OVCAR.txt
+    Untracked:  data/proteinGroups_UC_CD73.txt
+    Untracked:  output/enrichmentmap.txt
+    Untracked:  output/network_FC_pvalue.png
+    Untracked:  output/network_enrichmentmap.png
+    Untracked:  output/results_UC_CD73_210709.xlsx
+    Untracked:  output/results_UC_CD73_210716.xlsx
+    Untracked:  output/results_table_OV90_CD73_sph_vs_OV90_WT_sph.xlsx
+    Untracked:  output/results_table_OV90_CD73_vs_OV90_WT.xlsx
+    Untracked:  output/results_table_OVCAR_CD73_sph_vs_OVCAR_WT_sph.xlsx
+    Untracked:  output/results_table_OVCAR_CD73_vs_OVCAR_WT.xlsx
+    Untracked:  results_table.txt
+    Untracked:  results_table.zip
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/Template_LFQ_OVCAR_sph.Rmd</code>) and HTML (<code>docs/Template_LFQ_OVCAR_sph.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/FabioBedin/UC_CD73_210707/blob/1ab726ab857aaf734d6fd5e363709251fc649700/analysis/Template_LFQ_OVCAR_sph.Rmd" target="_blank">1ab726a</a>
+</td>
+<td>
+FabioBedin
+</td>
+<td>
+2021-09-28
+</td>
+<td>
+add new LFQ template analysis
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<style type="text/css">
+p{
+  font-size: 16px;
+}
+</style>
+<pre class="r"><code>## Proteomics
+library(&quot;MBQN&quot;)
+library(&quot;DEP&quot;)
+library(&quot;SummarizedExperiment&quot;)
+library(&quot;preprocessCore&quot;)
+library(&quot;enrichR&quot;)
+library(&quot;gprofiler2&quot;)
+library(&quot;org.Hs.eg.db&quot;)
+library(&quot;rrvgo&quot;)
+
+## Plots
+library(&quot;DT&quot;)
+library(&quot;patchwork&quot;)
+library(&quot;datapasta&quot;)
+library(&quot;ggstatsplot&quot;)
+library(&quot;UpSetR&quot;)
+library(&quot;ggrepel&quot;)
+library(&quot;visdat&quot;)
+library(&quot;naniar&quot;)
+
+## Networks
+library(&quot;STRINGdb&quot;)
+library(&quot;RCy3&quot;)
+library(&quot;RColorBrewer&quot;)
+
+## Other
+library(&quot;here&quot;)
+library(&quot;openxlsx&quot;)
+library(&quot;tidyverse&quot;)</code></pre>
+<pre class="r"><code>source(here::here(&quot;code/custom_functions.R&quot;))</code></pre>
+<pre class="r"><code>data &lt;- read.csv(here::here(paste0(&quot;data/&quot;, params$proteinGroups)), header = TRUE,stringsAsFactors = FALSE, sep = &quot;\t&quot;)
+## qui metterei anche Razor...unique.peptides al posto di Peptides, perchè così non conto i peptidi che sono attribuiti a più di 1 PG
+data &lt;- data[data$Reverse != &quot;+&quot; &amp; data$Potential.contaminant != &quot;+&quot; &amp; data$Only.identified.by.site != &quot;+&quot; &amp; data$Peptides &gt;= params$n_peptides,]
+
+data_unique &lt;- make_unique(data, &quot;Gene.names&quot;, &quot;Protein.IDs&quot;, delim = &quot;;&quot;)</code></pre>
+<pre class="r"><code>cond_1 &lt;- params$test_1
+
+cond_2 &lt;- params$test_2
+
+conditions&lt;-c(cond_1,cond_2)
+
+test&lt;- paste(cond_1,cond_2,sep=&quot;_vs_&quot;)
+
+expdesign &lt;- read.table(here::here(paste0(&quot;data/&quot;, params$expdesign)), header = T, stringsAsFactors = F)
+
+expdesign &lt;- subset(expdesign, condition %in% conditions)
+
+columns&lt;-match(paste(&quot;LFQ.intensity.&quot;,expdesign$label,sep=&quot;&quot;),colnames(data_unique))
+
+data_se &lt;- make_se(data_unique, columns, expdesign)
+
+## define automaticaly the best statistical threshold to filter data besed on replicates:
+if(max(expdesign$replicate)&lt;=3){
+       threshold&lt;-0
+     } else if(max(expdesign$replicate)&lt;6){
+       threshold&lt;-1
+     } else if (max(expdesign$replicate)&gt;=6){
+       threshold&lt;-trunc(max(expdesign$replicate)/2)
+     }
+
+data_filt &lt;- filter_missval(data_se, thr = threshold)</code></pre>
+<div id="ovcar_cd73_sph-vs-ovcar_wt_sph" class="section level1">
+<h1><strong>OVCAR_CD73_sph</strong> vs <strong>OVCAR_WT_sph</strong></h1>
+<hr />
+</div>
+<div id="introduction" class="section level1">
+<h1><strong>Introduction</strong></h1>
+<p>First, we need to wrangling the original dataset. From the <strong>proteinGroups</strong> obtained by <a href="https://www.maxquant.org/">MaxQuant</a> software, I remove proteins that are marked form the software as potential contaminant, only identify by site and reverse.<br />
+We che also filter the initial datasets by excluding all proteins identified by less than 2 peptides. (default behavior)<br />
+Now, we generate some quality control plots to investigate the structure of the dataset and observe the effect of filters. (aggiungere il tipo di filtro che faccio)</p>
+<div id="quality-control-plots" class="section level2 tabset tabset-fade">
+<h2><strong>1. Quality control plots</strong></h2>
+<div id="proteins-per-samples" class="section level3 tabset">
+<h3>Proteins per samples</h3>
+<p>This plot show the number of proteins identify in each samples <em>after and before User define</em> filters:</p>
+<div id="filtered" class="section level4">
+<h4>Filtered</h4>
+<pre class="r"><code>plot_numbers_lables(data_filt)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/proteins-filt-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="not-filtered" class="section level4">
+<h4>Not-Filtered</h4>
+<pre class="r"><code>plot_numbers_lables(data_se)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/proteins-NOfilt-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="distributions" class="section level3 tabset">
+<h3>Distributions</h3>
+<p>This plot is useful for checking the distributions of the samples <em>after and before User define</em> filters:</p>
+<div id="filtered-1" class="section level4">
+<h4>Filtered</h4>
+<pre class="r"><code>plot_normalization(data_filt)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/normalization-filt-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="not-filtered-1" class="section level4">
+<h4>Not-Filtered</h4>
+<pre class="r"><code>plot_normalization(data_se)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/normalization-NOfilt-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="missing-data" class="section level3 tabset">
+<h3>Missing data</h3>
+<p>This plot we can explore the missing data pattern <em>after and before User define</em> filters. Notice that the percentages of missingness are provided in the data. These are accurate to 1 decimal place. Also the dataset is arranged by columns with most missingness.</p>
+<div id="filtered-2" class="section level4">
+<h4>Filtered</h4>
+<pre class="r"><code>assay(data_filt) %&gt;% 
+  as.data.frame() %&gt;% 
+  vis_miss(., sort_miss = TRUE)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/missing-data-filt-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="not-filtered-2" class="section level4">
+<h4>Not-Filtered</h4>
+<pre class="r"><code>assay(data_se) %&gt;% 
+  as.data.frame() %&gt;% 
+  vis_miss(., sort_miss = TRUE)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/missing-data-NOfilt-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="sample-cvs" class="section level3 tabset">
+<h3>Sample CVs</h3>
+<p>The coefficient of variation (CV) is a statistical measure of the dispersion of data points in a data series around the mean. The coefficient of variation represents the ratio of the standard deviation to the mean, and it is a useful statistic for comparing the degree of variation from one data series to another, even if the means are drastically different from one another.</p>
+<div id="filtered-3" class="section level4">
+<h4>Filtered</h4>
+<pre class="r"><code>plot_cvs(data_filt)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/CVs-filt-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="not-filtered-3" class="section level4">
+<h4>Not-Filtered</h4>
+<pre class="r"><code>plot_cvs(data_se)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/CVs-NOfilt-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="upset-plot" class="section level2 tabset tabset-fade">
+<h2><strong>2. Upset plot</strong></h2>
+<p>With this plot we can identify the numper of prteins in common within the 2 conditions or in common between all condition.</p>
+<div id="ovcar_cd73_sph" class="section level3">
+<h3>OVCAR_CD73_sph</h3>
+<pre class="r"><code>define_set &lt;- assay(data_filt) %&gt;%  as.data.frame() %&gt;% select(starts_with(cond_1)) %&gt;% colnames()
+n_sets &lt;- length(define_set)
+
+assay(data_filt) %&gt;% 
+  as.data.frame() %&gt;% 
+  select(starts_with(cond_1)) %&gt;% 
+  rownames_to_column() %&gt;% 
+  pivot_longer(!rowname, names_to = &quot;samples&quot;, values_to = &quot;intensity&quot;) %&gt;% 
+  mutate(intensity = if_else(is.na(intensity), 0, 1)) %&gt;% 
+  pivot_wider(names_from = samples, values_from = intensity) %&gt;% 
+  as.data.frame() %&gt;% 
+  upset(nsets = n_sets,
+        sets = define_set,
+        order.by = &quot;freq&quot;,
+        keep.order = T,
+        text.scale = 2.5,
+        point.size = 4,
+        line.size = 0.5, 
+        sets.bar.color = &quot;coral2&quot;,
+        main.bar.color  = &quot;gray44&quot;)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/upset-cond1-1.png" width="1440" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ovcar_wt_sph" class="section level3">
+<h3>OVCAR_WT_sph</h3>
+<pre class="r"><code>define_set &lt;- assay(data_filt) %&gt;%  as.data.frame() %&gt;% select(starts_with(cond_2)) %&gt;% colnames()
+n_sets &lt;- length(define_set)
+
+assay(data_filt) %&gt;% 
+  as.data.frame() %&gt;% 
+  select(starts_with(cond_2)) %&gt;% 
+  rownames_to_column() %&gt;% 
+  pivot_longer(!rowname, names_to = &quot;samples&quot;, values_to = &quot;intensity&quot;) %&gt;% 
+  mutate(intensity = if_else(is.na(intensity), 0, 1)) %&gt;% 
+  pivot_wider(names_from = samples, values_from = intensity) %&gt;% 
+  as.data.frame() %&gt;% 
+  upset(nsets = n_sets,
+        sets = define_set,
+        order.by = &quot;freq&quot;,
+        keep.order = T,
+        text.scale = 2.5,
+        point.size = 4,
+        line.size = 0.5, 
+        sets.bar.color = &quot;turquoise3&quot;,
+        main.bar.color  = &quot;gray44&quot;)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/upset-cond2-1.png" width="1440" style="display: block; margin: auto;" /></p>
+</div>
+<div id="both-conditions" class="section level3">
+<h3>Both conditions</h3>
+<pre class="r"><code>define_set &lt;- assay(data_filt) %&gt;% colnames()
+n_sets &lt;- length(define_set)
+n_each &lt;- n_sets / 2
+
+assay(data_filt) %&gt;% 
+  as.data.frame() %&gt;% 
+  rownames_to_column() %&gt;% 
+  pivot_longer(!rowname, names_to = &quot;samples&quot;, values_to = &quot;intensity&quot;) %&gt;% 
+  mutate(intensity = if_else(is.na(intensity), 0, 1)) %&gt;% 
+  pivot_wider(names_from = samples, values_from = intensity) %&gt;% 
+  as.data.frame() %&gt;% 
+  upset(nsets = n_sets,
+        sets = define_set,
+        order.by = &quot;freq&quot;,
+        keep.order = T,
+        text.scale = 2.5,
+        point.size = 4,
+        line.size = 0.5, 
+        sets.bar.color = rep(c(&quot;red3&quot;, &quot;royalblue1&quot;), each = n_each),
+        main.bar.color  = &quot;gray44&quot;)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/upset-both-1.png" width="1440" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="imputation" class="section level2">
+<h2><strong>3. Imputation</strong></h2>
+<p>An idealized version of a label-free discovery mass spectrometry proteomics experiment would provide absolute abundance measurements for a whole proteome, across varying conditions. Unfortunately, this ideal is not realized. Measurements are made on peptides requiring an inferential step to obtain protein level estimates. The inference is complicated by experimental factors that necessitate relative abundance estimation and result in widespread non-ignorable missing data. Relative abundance on the log scale takes the form of parameter contrasts. In a complete-case analysis, contrast estimates may be biased by missing data and a substantial amount of useful information will often go unused.</p>
+<pre class="r"><code>data_imputed &lt;- mix_imputation_mean(data_filt, cond1 = cond_1, cond2 = cond_2)
+
+plot_imputation(data_filt, data_imputed)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/imputation-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>data_filt &lt;- data_imputed</code></pre>
+</div>
+<div id="differential-enrichment-analysis" class="section level2">
+<h2><strong>4. Differential enrichment analysis</strong></h2>
+<p>Protein-wise linear models combined with empirical Bayes statistics are used for the differential enrichment analysis (or differential expression analysis) and False discovery rate (FDR) is ajusted with <em>Benjamini-Hochberg</em> procedure. Significant proteins are are define with <strong>FDR = 0.05</strong> and <strong>Fold change = 1</strong></p>
+<pre class="r"><code>data_diff &lt;- test_diff_BH(data_filt, type = &quot;manual&quot;, test = test)
+
+dep &lt;- add_rejections(data_diff, alpha = params$FDR, lfc = params$Fold_change)
+
+results&lt;-get_results(dep)</code></pre>
+<p>There are <strong>215</strong> significant proteins in <strong>OVCAR_CD73_sph</strong> vs <strong>OVCAR_WT_sph</strong> comparison.</p>
+<p>The results from the previous analysis can be easily visualized by a number of functions. These visualizations assist in the determination of the optimal cutoffs to be used, highlight the most interesting samples and contrasts, and pinpoint differentially enriched/expressed proteins.</p>
+<div id="visualization-of-the-results" class="section level3 tabset tabset-fade">
+<h3><strong>4.1. Visualization of the results</strong></h3>
+<div id="pca" class="section level4">
+<h4>PCA</h4>
+<p>The PCA plot can be used to get a high-level overview of the data. This can be very useful to observe batch effects, such as clear differences between replicates.</p>
+<pre class="r"><code>if(params$Imputation){
+  if(nrow(dep) &gt;= 500){
+    n_value &lt;- 500
+  }else {
+    n_value &lt;- nrow(dep)
+  }
+  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = &quot;condition&quot;)
+} else {
+  var &lt;- apply(assay(dep), 1, sd)
+  df &lt;- assay(dep)[order(var, decreasing = TRUE)[seq_len(nrow(dep))],]
+  n_value &lt;- df %&gt;% as.data.frame() %&gt;% drop_na() %&gt;% nrow()
+  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = &quot;condition&quot;)
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/PCA-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="volcano" class="section level4">
+<h4>Volcano</h4>
+<p>Volcano plots allows to inspect the enrichment of proteins between the two samples (x axis) and their corresponding adjusted p value (y axis).</p>
+<pre class="r"><code>plot_volcano(dep, contrast=test, add_names=T, label_size=5, adjusted = F)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/volcano-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="volcano-and-unique" class="section level4">
+<h4>Volcano and unique</h4>
+<pre class="r"><code>plot_volcano_2(dep, contrast=test, add_names=T, label_size=5, adjusted = F, unique_vec = uni_name)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/volcano-unique-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-heatmap" class="section level4">
+<h4>Cluster heatmap</h4>
+<p>The heatmap representation gives an overview of all significant proteins (rows) in all samples (columns). This allows to see general trends, for example if one sample or replicate is really different compared to the others. Additionally, the clustering of samples (columns) can indicate closer related samples and clustering of proteins (rows) indicates similarly behaving proteins.</p>
+<pre class="r"><code>plot_heatmap(dep, type = &quot;centered&quot;, kmeans = TRUE, k = 5, show_row_names = F, indicate = &quot;condition&quot;, col_limit = 5)</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/cluster-heatmap-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="result-table" class="section level3">
+<h3><strong>4.2. Result table</strong></h3>
+<p>In this table are summarized the results of DEP analysis, sorted by p.value. Proteins that are UP regulated are colored with a red box in Fold change column, in the orhter hand proteins that are DOWN regulated are colored with blue.</p>
+<pre class="r"><code>results %&gt;% 
+  select(starts_with(&quot;name&quot;) | starts_with(test)) %&gt;% 
+  filter(across(ends_with(&quot;significant&quot;))) %&gt;% 
+  arrange(across(ends_with(&quot;p.adj&quot;))) %&gt;%
+  mutate(across(2:3, format, scientific = T, digits = 2)) %&gt;%
+  dplyr::rename_with(~ tolower(gsub(paste0(test,&quot;_&quot;), &quot;&quot;, .x)), .cols = starts_with(test)) %&gt;% 
+  mutate(significant = str_to_title(significant)) %&gt;%
+  dplyr::rename(Fold.Change = ratio, Gene.name = name) %&gt;% 
+  DT::datatable(options = list(
+  columnDefs = list(list(className = &#39;dt-center&#39;, targets = 1:5)),
+  pageLength = 10)) %&gt;%
+  formatStyle(&#39;Fold.Change&#39;, backgroundColor = styleInterval(c(-1, 1), c(&#39;lightblue&#39;, &#39;white&#39;, &#39;tomato&#39;))) %&gt;% 
+  formatStyle(&#39;significant&#39;, color = styleEqual(c(&quot;True&quot;, &quot;False&quot;), c(&#39;green&#39;, &#39;red&#39;)))</code></pre>
+<div id="htmlwidget-0dd1ba32e0541469b5ed" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0dd1ba32e0541469b5ed">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215"],["NT5E","NUDT16","CPA4","FSCN1","CD70","DST","FLVCR2","MPHOSPH8","RAB27B","SERPINB8","CD109","HDHD3","LCN2","RAB19","DIRAS2","GHDC","HLA-C","XRN1","ANK3","ESRP2","NCALD","PAK1","RABGAP1L.1","CCDC86","HMGCR","APOE","MOB2","CLYBL","CSTF2T","PHKB","PLCB4","PANX1","PPP1R21","MACC1","GLS","GLS.1","SUN2","AP2S1","PLEC","S100A1","FRK","FBXO2","ARL8B","UBE2L6","UGT1A7","LRP2","CTH","FHOD1","WIZ","CCDC80","C3","BCL10","CTSZ","SERPINB5","CD82","NKAP","SLC35A1","RAB25","MBOAT1","CRYAB","FBLL1","IGF2R","CP","HIRIP3","SLC35A3","QSOX1","GBP2","GSTM3","LRRC8D","CKB","ACSL4","CALB2","PARP9","USP9Y","ITGB3","MSMO1","HMMR","PTGS1","SDC2","GBP1","CHSY3","CTGF","ASS1","S100A9","PCDH7","SLC4A7","CD44","S100A8","AKR1B10","DTX3L","GAN","ACADM","PLCD3","TGM2","C9orf114","MMGT1","SQRDL","GCLM","ATP1B1","MEST","AK1","MAN2A1","DNPH1","KLRG2","NQO1","VCAN","AKAP12","PML","LDLR","COMMD3-BMI1","CRTAP","MARCKS","EEFSEC","SURF6","IQGAP2","ITGAV","TRAPPC10","CRABP2","BICC1","UBE2E2","WFS1","PLEKHM2","CYP4F11","TMEM30A","AMACR","HSPBAP1","VLDLR","AHNAK2","C8orf33","EGFR","NMNAT1","AKR1C3","FNBP1","DPH5","GSTM1","ACAP2","GNAQ","MAP2K6","ABLIM1","CSK","EFHD1","FAM49A","PTDSS1","ME1","UBXN7","PAPOLA","MSN","ACSS3","FOXK1","MSLN.1","GBA","SLC7A5","KIAA1671","ENDOD1","PAPSS2","ADI1","KLHL14","MAP2","TRIO","LAMA3","LAMTOR2","BRAT1","SUMO3","GPRC5A","MDK","LXN","LAMTOR5","PKN2","PLD1","AK2","TPM1","SCARB1","C9orf142","RNASET2","VPS33A","H0YC42","S100A2","PARP14","AGPAT9","ANKRD28","PTGR1","PLBD2","AKT1","MRM1","CDKAL1","H1FX","HKDC1","SNX18","HCK","COL26A1","ITGB5","PRKAR2B","PGAP1","PPP3R1","C8orf82","PRKACB","ENTPD3","ITM2B","ASUN","SH3BGRL3","TADA3","DDAH1","METTL7A","CDK2","ARMC8","EPS8L2","CETN2","PNP","POLG2","IBA57","COL17A1","DPH6","FAM91A1","BHMT","EXOSC2"],["1.4e-14","4.1e-12","7.3e-12","2.1e-11","8.6e-11","6.9e-11","7.0e-11","9.4e-11","8.2e-11","1.9e-10","2.9e-10","3.1e-10","2.9e-10","3.1e-10","4.0e-10","4.6e-10","7.2e-10","1.9e-09","2.5e-09","2.9e-09","4.1e-09","5.6e-09","8.9e-09","1.7e-08","2.0e-08","2.1e-08","2.2e-08","2.6e-08","2.5e-08","2.6e-08","3.0e-08","3.2e-08","3.5e-08","4.5e-08","4.7e-08","6.0e-08","8.6e-08","1.6e-07","1.7e-07","1.7e-07","2.0e-07","2.4e-07","2.5e-07","3.0e-07","4.8e-07","5.2e-07","5.6e-07","5.5e-07","5.8e-07","8.1e-07","8.3e-07","1.4e-06","1.4e-06","1.8e-06","1.9e-06","2.0e-06","2.1e-06","2.3e-06","2.3e-06","2.4e-06","2.5e-06","2.5e-06","3.5e-06","3.6e-06","4.4e-06","4.5e-06","5.1e-06","5.6e-06","6.5e-06","7.0e-06","7.2e-06","8.3e-06","8.7e-06","1.1e-05","1.1e-05","1.1e-05","1.5e-05","1.5e-05","1.5e-05","1.5e-05","1.6e-05","1.6e-05","1.7e-05","1.6e-05","1.9e-05","2.0e-05","2.2e-05","2.2e-05","2.8e-05","2.8e-05","2.8e-05","3.5e-05","3.5e-05","3.5e-05","3.5e-05","3.7e-05","3.7e-05","3.9e-05","4.0e-05","4.1e-05","4.3e-05","4.9e-05","5.5e-05","5.5e-05","5.4e-05","5.4e-05","5.9e-05","6.0e-05","6.5e-05","6.8e-05","7.5e-05","7.5e-05","8.0e-05","8.3e-05","1.2e-04","1.5e-04","1.5e-04","1.7e-04","1.8e-04","1.8e-04","1.8e-04","1.9e-04","2.0e-04","2.0e-04","2.1e-04","2.2e-04","2.4e-04","2.5e-04","2.5e-04","2.6e-04","2.5e-04","3.1e-04","3.2e-04","3.4e-04","3.4e-04","3.5e-04","3.5e-04","3.6e-04","3.9e-04","3.9e-04","3.8e-04","4.1e-04","4.3e-04","4.7e-04","4.7e-04","4.9e-04","5.0e-04","5.1e-04","5.1e-04","5.2e-04","5.3e-04","5.4e-04","5.4e-04","5.5e-04","5.9e-04","6.0e-04","6.5e-04","6.3e-04","6.4e-04","6.8e-04","6.8e-04","7.2e-04","7.4e-04","7.9e-04","1.0e-03","1.1e-03","1.1e-03","1.1e-03","1.1e-03","1.2e-03","1.2e-03","1.2e-03","1.3e-03","1.3e-03","1.3e-03","1.5e-03","1.5e-03","1.5e-03","1.6e-03","1.7e-03","1.7e-03","1.8e-03","1.9e-03","2.0e-03","2.0e-03","2.0e-03","2.3e-03","2.4e-03","2.4e-03","2.4e-03","2.4e-03","2.7e-03","2.8e-03","3.0e-03","3.1e-03","3.3e-03","3.5e-03","4.4e-03","4.6e-03","4.6e-03","4.7e-03","5.1e-03","5.6e-03","5.7e-03","6.2e-03","6.2e-03","6.5e-03","6.7e-03","6.7e-03","7.2e-03","8.4e-03","8.5e-03","8.9e-03","9.1e-03","9.1e-03"],["6.2e-11","8.8e-09","1.0e-08","2.3e-08","4.5e-08","4.5e-08","4.5e-08","4.5e-08","4.5e-08","8.1e-08","9.8e-08","9.8e-08","9.8e-08","9.8e-08","1.1e-07","1.2e-07","1.8e-07","4.6e-07","5.8e-07","6.4e-07","8.5e-07","1.1e-06","1.7e-06","3.0e-06","3.4e-06","3.5e-06","3.5e-06","3.8e-06","3.8e-06","3.8e-06","4.2e-06","4.3e-06","4.6e-06","5.7e-06","5.8e-06","7.3e-06","1.0e-05","1.8e-05","1.9e-05","1.9e-05","2.1e-05","2.4e-05","2.5e-05","3.0e-05","4.7e-05","4.9e-05","5.0e-05","5.0e-05","5.1e-05","7.0e-05","7.1e-05","1.2e-04","1.2e-04","1.4e-04","1.5e-04","1.6e-04","1.6e-04","1.7e-04","1.7e-04","1.7e-04","1.7e-04","1.7e-04","2.4e-04","2.5e-04","2.9e-04","2.9e-04","3.2e-04","3.6e-04","4.0e-04","4.3e-04","4.4e-04","4.9e-04","5.0e-04","6.0e-04","6.3e-04","6.3e-04","7.6e-04","7.6e-04","7.6e-04","7.7e-04","7.8e-04","7.8e-04","7.9e-04","7.9e-04","8.9e-04","9.3e-04","9.6e-04","9.7e-04","1.2e-03","1.2e-03","1.2e-03","1.3e-03","1.3e-03","1.3e-03","1.4e-03","1.4e-03","1.4e-03","1.4e-03","1.5e-03","1.5e-03","1.5e-03","1.7e-03","1.8e-03","1.8e-03","1.8e-03","1.8e-03","1.9e-03","1.9e-03","2.1e-03","2.1e-03","2.2e-03","2.2e-03","2.3e-03","2.4e-03","3.2e-03","3.8e-03","3.9e-03","4.2e-03","4.3e-03","4.3e-03","4.3e-03","4.5e-03","4.6e-03","4.6e-03","4.7e-03","5.0e-03","5.2e-03","5.4e-03","5.4e-03","5.4e-03","5.4e-03","6.2e-03","6.3e-03","6.6e-03","6.6e-03","6.8e-03","6.8e-03","6.9e-03","7.1e-03","7.1e-03","7.1e-03","7.3e-03","7.4e-03","7.9e-03","7.9e-03","8.1e-03","8.2e-03","8.2e-03","8.2e-03","8.2e-03","8.3e-03","8.4e-03","8.4e-03","8.6e-03","9.0e-03","9.1e-03","9.5e-03","9.5e-03","9.5e-03","9.7e-03","9.7e-03","1.0e-02","1.0e-02","1.1e-02","1.3e-02","1.3e-02","1.3e-02","1.3e-02","1.4e-02","1.4e-02","1.4e-02","1.4e-02","1.5e-02","1.5e-02","1.5e-02","1.6e-02","1.6e-02","1.7e-02","1.8e-02","1.8e-02","1.8e-02","1.9e-02","2.0e-02","2.0e-02","2.0e-02","2.0e-02","2.2e-02","2.2e-02","2.2e-02","2.2e-02","2.2e-02","2.3e-02","2.4e-02","2.5e-02","2.6e-02","2.6e-02","2.8e-02","3.2e-02","3.3e-02","3.3e-02","3.3e-02","3.5e-02","3.7e-02","3.7e-02","4.0e-02","4.0e-02","4.1e-02","4.2e-02","4.2e-02","4.4e-02","4.8e-02","4.8e-02","5.0e-02","5.0e-02","5.0e-02"],["True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True","True"],[8.56,4.38,-4.2,-4.46,-4.06,4.12,-3.09,-3.62,-6.4,3.08,-4.7,3.4,3.97,-3.64,2.55,-3.04,3.35,2.28,-2.66,2.48,-4.32,4.14,1.86,2.43,-3.37,-1.75,2.05,2.19,1.7,2.79,1.84,-2.34,1.71,2.45,-2.56,-2.75,2.74,2.34,-1.55,2.86,2.35,-4.23,2.08,1.58,-3.13,1.89,-3.98,-2.31,-2.75,1.57,1.79,1.07,-2.01,-1.63,1.74,-2.88,-1.29,1.26,2.72,-1.78,1.81,-1.53,3.52,1.47,2.54,-2.32,1.67,-1.05,3.29,1.6,-1.11,-4.95,1.13,1.5,-2.12,-1.36,1.11,2.6,-2.15,1.06,-1.28,-1.73,1.61,-2.64,1.96,-1.22,-1.15,-2.31,-1.79,1.14,-1.26,1.2,-1.25,-1.11,1.03,-1.82,-1.05,1.01,-1.35,-1.26,1.1,-1.55,1.36,-2.12,1.08,-2.32,-1.06,1.04,-2.33,-1.25,-1.68,-1.11,1.67,1.22,-2.51,-1.01,-1.77,-1.48,-1.37,1.09,-1.11,-1.62,-2.74,-1.05,-1.6,1.8,-2.08,-1.17,-1.12,-1.8,1.71,1.07,1.09,1.22,-1.27,2.41,1.19,1.23,-1.01,1.07,-1.44,-1.82,-1.03,-1.22,1.18,1.04,-1.23,1.56,1.05,-1.98,-1.04,-1.31,-1.09,-1.66,-1.2,1.31,1.22,-1.56,-3.24,-1.19,-1.25,1.2,-1.55,-1.25,1.03,1.25,-1.27,1.47,-1.46,-1.12,-1.42,-1.17,1.12,-2.01,1.04,1.17,1.05,2.06,-1.04,1.06,1.01,-1.05,1.05,-1.28,-1.35,2.93,1.16,-1.13,1.08,-1.06,-1.63,-1.25,-1.04,-1.08,-1.53,1.46,1.12,-1.15,1.23,-1.42,2.69,1.26,1.25,1.23,1.38,1.66,-1.99,-1.05,-2.14,1.15,1.36,1.01,-1.18,1.51,1.84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Gene.name<\/th>\n      <th>p.val<\/th>\n      <th>p.adj<\/th>\n      <th>significant<\/th>\n      <th>Fold.Change<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":[1,2,3,4,5]},{"orderable":false,"targets":0}],"pageLength":10,"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= -1 ? \"lightblue\" : value <= 1 ? \"white\" : \"tomato\"});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'color':value == \"True\" ? \"green\" : value == \"False\" ? \"red\" : null});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="gene-ontology" class="section level2">
+<h2><strong>5. Gene Ontology</strong></h2>
+<p>Now I perfom a gene onology analysis (GO or by branch <a href="GO:MF" class="uri">GO:MF</a>, <a href="GO:BP" class="uri">GO:BP</a>, <a href="GO:CC" class="uri">GO:CC</a>) and a KEGG ontology.<br />
+The enrichment results are visualized with an interactive <strong>Manhattan-like-plot</strong> named “Gostplot”.</p>
+<div id="ovcar_cd73_sph-1" class="section level3 tabset tabset-fade">
+<h3><strong>5.1. OVCAR_CD73_sph</strong></h3>
+<div id="gostplot" class="section level4">
+<h4>Gostplot</h4>
+<p>UP regulated proteins in OVCAR_CD73_sph were used to generate these gene ontologies.</p>
+<pre class="r"><code>Gname &lt;- results %&gt;% filter(significant &amp; get(paste0(test, &quot;_ratio&quot;)) &gt; 0) %&gt;% pull(name)
+
+if(!params$Imputation){
+  Uni &lt;- unique_pair(data_filt_unique, conditions = conditions, table = T) %&gt;% 
+  filter(!!sym(paste0(&quot;unique_&quot;, cond_1)) == &quot;+&quot;) %&gt;% 
+  pull(name) %&gt;% unique()
+
+  Gname &lt;- c(Gname, Uni)
+}
+
+if(length(Gname) == 0){
+  print(&quot;NOT enough data.&quot;)
+}else{
+  GO &lt;- gost(query = Gname, organism = &quot;hsapiens&quot;, sources = c(&quot;GO:BP&quot;, &quot;GO:MF&quot;, &quot;GO:CC&quot;, &quot;KEGG&quot;), ordered_query = T, evcodes = TRUE)
+  if(is.null(GO)){
+    print(&quot;NOT enough data.&quot;)
+  }else{
+    gostplot(GO, capped = TRUE, interactive = TRUE)
+  }
+}</code></pre>
+<div id="htmlwidget-4906484ed42468d86de4" style="width:960px;height:768px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4906484ed42468d86de4">{"x":{"data":[{"x":[124.883922912546,142.072867924993,150.942441594298,113.67696489308,124.89172720086,126.468193440367,89.4875732626242,102.341236116427,150.641976494194,150.63417220588,122.655798598787,123.330869537982,83.4041305215562,172.123280079556,89.4134325236375,108.120311613233,89.7373104886847],"y":[3.92714225294137,3.64355721328261,2.67210487218923,2.30692861948677,1.89805285578108,1.79406271261348,1.68429974122085,1.62820827079313,1.61634561086193,1.61634561086193,1.61634561086193,1.52701075136551,1.43319032764068,1.42949179832432,1.41038459637542,1.40243310169424,1.39155931495986],"text":["GO:0044281 (1924) <br> small molecule metabolic process <br> 1.183e-04","GO:0060333 (88) <br> interferon-gamma-mediated signaling pathway <br> 2.272e-04","GO:0071346 (177) <br> cellular response to interferon-gamma <br> 2.128e-03","GO:0034341 (198) <br> response to interferon-gamma <br> 4.933e-03","GO:0044283 (675) <br> small molecule biosynthetic process <br> 1.265e-02","GO:0045087 (1003) <br> innate immune response <br> 1.607e-02","GO:0009066 (56) <br> aspartate family amino acid metabolic process <br> 2.069e-02","GO:0019752 (1033) <br> carboxylic acid metabolic process <br> 2.354e-02","GO:0071267 (7) <br> L-methionine salvage <br> 2.419e-02","GO:0071265 (7) <br> L-methionine biosynthetic process <br> 2.419e-02","GO:0043102 (7) <br> amino acid salvage <br> 2.419e-02","GO:0043436 (1066) <br> oxoacid metabolic process <br> 2.972e-02","GO:0006082 (1098) <br> organic acid metabolic process <br> 3.688e-02","GO:1901607 (68) <br> alpha-amino acid biosynthetic process <br> 3.720e-02","GO:0008652 (69) <br> cellular amino acid biosynthetic process <br> 3.887e-02","GO:0031667 (513) <br> response to nutrient levels <br> 3.959e-02","GO:0009134 (14) <br> nucleoside diphosphate catabolic process <br> 4.059e-02"],"key":["GO:0044281","GO:0060333","GO:0071346","GO:0034341","GO:0044283","GO:0045087","GO:0009066","GO:0019752","GO:0071267","GO:0071265","GO:0043102","GO:0043436","GO:0006082","GO:1901607","GO:0008652","GO:0031667","GO:0009134"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[20.022021024525,14.8602606051777,16.2186538822987,16.4230154120721,18.474084017717,19.0777811700993,13.8848832381912,19.1217564517467,6.4342699332302,6.4342699332302,6.4342699332302,19.1685392838659,19.2124119818765,14.3149385764328,14.3465674381738,18.0407665073975,10.0035007688392],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedData0dd1ba32","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[59.4896732535677,55.3213853178112,55.6531310804885,54.0802658762658,55.415054709626,55.4462778402309,54.9271932939242,64.5244030636107,57.8309444401815,69.6488993741428,62.1358335723345,64.4307336717959,62.1241248983576,58.6856776404911],"y":[3.88285863195217,3.63645021265331,3.61684608930885,3.31972325350159,3.31972325350159,2.80196532891499,2.03690593874507,1.98968891372728,1.85928330997441,1.71891957782221,1.71273765508879,1.71273765508879,1.48490567644753,1.35070085350343],"text":["GO:0031982 (4058) <br> vesicle <br> 1.310e-04","GO:0005737 (11951) <br> cytoplasm <br> 2.310e-04","GO:0005829 (5361) <br> cytosol <br> 2.416e-04","GO:0000323 (723) <br> lytic vacuole <br> 4.789e-04","GO:0005764 (723) <br> lysosome <br> 4.789e-04","GO:0005773 (818) <br> vacuole <br> 1.578e-03","GO:0005622 (14808) <br> intracellular anatomical structure <br> 9.185e-03","GO:0070062 (2178) <br> extracellular exosome <br> 1.024e-02","GO:0030056 (6) <br> hemidesmosome <br> 1.383e-02","GO:1903561 (2263) <br> extracellular vesicle <br> 1.910e-02","GO:0043230 (2265) <br> extracellular organelle <br> 1.938e-02","GO:0065010 (2265) <br> extracellular membrane-bounded organelle <br> 1.938e-02","GO:0043227 (13201) <br> membrane-bounded organelle <br> 3.274e-02","GO:0031234 (103) <br> extrinsic component of cytoplasmic side of plasma membrane <br> 4.460e-02"],"key":["GO:0031982","GO:0005737","GO:0005829","GO:0000323","GO:0005764","GO:0005773","GO:0005622","GO:0070062","GO:0030056","GO:1903561","GO:0043230","GO:0065010","GO:0043227","GO:0031234"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[21.0404125631874,22.4160687692957,21.4053368440479,18.5805662054191,18.5805662054191,18.7700222707196,22.6771653543307,20.1956115808591,3.77952755905512,20.2488368012655,20.2500629167438,20.2500629167438,22.5376914650522,15.1803389626159],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedData0dd1ba32","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[3.99409256943449,42.3384244427482,26.7446985964464,28.4344091298419,23.0960164977747,2.13267934904261,48.6133771857045,17.4454371620777,23.0882118301839,26.9281082848288,16.4971700498026,28.4305067960466,9.36370387186474,16.6103377298684,23.1116258329561,21.0511935890003,17.5351908393712],"y":[5.81820558617036,5.57464802169352,4.64322072375461,4.38597764412241,4.29291725470124,4.27076444544566,4.26629520458441,4.22116733215506,4.21165839937887,3.95958167670876,2.52406395410582,1.96586881181121,1.66256746696981,1.47743958284282,1.40616753042253,1.35595687138976,1.32045125613457],"text":["GO:0003824 (5682) <br> catalytic activity <br> 1.520e-06","GO:0097367 (2282) <br> carbohydrate derivative binding <br> 2.663e-06","GO:0035639 (1846) <br> purine ribonucleoside triphosphate binding <br> 2.274e-05","GO:0043168 (2413) <br> anion binding <br> 4.112e-05","GO:0032555 (1917) <br> purine ribonucleotide binding <br> 5.094e-05","GO:0000166 (2176) <br> nucleotide binding <br> 5.361e-05","GO:1901265 (2177) <br> nucleoside phosphate binding <br> 5.416e-05","GO:0017076 (1932) <br> purine nucleotide binding <br> 6.009e-05","GO:0032553 (1934) <br> ribonucleotide binding <br> 6.142e-05","GO:0036094 (2516) <br> small molecule binding <br> 1.098e-04","GO:0016740 (2341) <br> transferase activity <br> 2.992e-03","GO:0043167 (6056) <br> ion binding <br> 1.082e-02","GO:0005524 (1500) <br> ATP binding <br> 2.175e-02","GO:0016772 (947) <br> transferase activity, transferring phosphorus-containing groups <br> 3.331e-02","GO:0032559 (1564) <br> adenyl ribonucleotide binding <br> 3.925e-02","GO:0030554 (1577) <br> adenyl nucleotide binding <br> 4.406e-02","GO:0017111 (424) <br> nucleoside-triphosphatase activity <br> 4.781e-02"],"key":["GO:0003824","GO:0097367","GO:0035639","GO:0043168","GO:0032555","GO:0000166","GO:1901265","GO:0017076","GO:0032553","GO:0036094","GO:0016740","GO:0043167","GO:0005524","GO:0016772","GO:0032559","GO:0030554","GO:0017111"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[21.4805968719173,20.2604377430506,19.9636707851903,20.337679127504,20.0168904094899,20.1943322340864,20.1949720668523,20.0278598050606,20.0293153957226,20.3952859984957,20.2958052204455,21.5627299213649,19.6677993712704,18.9916909097438,19.7278002728896,19.7396607484481,17.7319996240693],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedData0dd1ba32","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,49.9206590071537],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[53.8226750487752,71.2217645783655],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[75.123780619987,193.971385215695],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[197.873401257316,200.003902016042],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(221,68,119,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[180],"y":[16.2],"text":"values above this threshold are capped","hovertext":"","textfont":{"size":7.55905511811024,"color":"rgba(190,190,190,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,210],"y":[16,16],"text":"","type":"scatter","mode":"lines","line":{"width":0.755905511811024,"color":"rgba(190,190,190,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":51.8931100989696,"l":61.0377750103778},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP","KEGG"],"tickvals":[25.9603295035768,62.5222198135703,134.547582917841,198.938651636679],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP","KEGG"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,18.5],"tickmode":"array","ticktext":["0","2","4","6","8","10","12","14",">16"],"tickvals":[0,2,4,6,8,10,12,14,16],"categoryorder":"array","categoryarray":["0","2","4","6","8","10","12","14",">16"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":-0.0108706932337069,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis"},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"41444c0061c8":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"41446a222f1d":{"x":{},"xend":{},"y":{},"yend":{}},"414456236ef0":{"x":{},"xend":{},"y":{},"yend":{}},"414411f73a26":{"x":{},"xend":{},"y":{},"yend":{}},"41442b2c4ce5":{"x":{},"xend":{},"y":{},"yend":{}},"4144174d2096":{"x":{},"y":{}},"4144707e5736":{"yintercept":{}}},"cur_data":"41444c0061c8","visdat":{"41444c0061c8":["function (y) ","x"],"41446a222f1d":["function (y) ","x"],"414456236ef0":["function (y) ","x"],"414411f73a26":["function (y) ","x"],"41442b2c4ce5":["function (y) ","x"],"4144174d2096":["function (y) ","x"],"4144707e5736":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedData0dd1ba32"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="table-results" class="section level4">
+<h4>Table results</h4>
+<p>The results can also be visualized with a table:</p>
+<pre class="r"><code>if(is.null(GO)){
+  print(&quot;NOT enough data.&quot;)
+}else{
+  GO$result %&gt;% 
+    as.data.frame() %&gt;% 
+    select(starts_with(c(&quot;source&quot;, &quot;term_name&quot;, &quot;p_value&quot;, &quot;term_size&quot;, &quot;intersection_size&quot;))) %&gt;% 
+    arrange(p_value) %&gt;%  
+    mutate(p_value = format(p_value, scientific = T, digits = 2)) %&gt;% 
+    DT::datatable(options = list(
+    columnDefs = list(list(className = &#39;dt-center&#39;, targets = 1:6)),
+    pageLength = 10)) %&gt;%
+    formatStyle(&#39;source&#39;, backgroundColor = styleEqual(c(&quot;GO:BP&quot;, &quot;GO:MF&quot;, &quot;GO:CC&quot;, &quot;KEGG&quot;), c(&#39;orange&#39;, &#39;tomato&#39;, &#39;lightgreen&#39;, &#39;violet&#39;)))
+}</code></pre>
+<div id="htmlwidget-a421697d58abce2053a2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a421697d58abce2053a2">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48"],["GO:MF","GO:MF","GO:MF","GO:MF","GO:MF","GO:MF","GO:MF","GO:MF","GO:MF","GO:MF","GO:BP","GO:CC","GO:BP","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:BP","GO:MF","GO:BP","GO:CC","GO:CC","GO:MF","GO:BP","GO:CC","GO:BP","GO:CC","GO:CC","GO:CC","GO:BP","GO:MF","GO:BP","GO:BP","GO:BP","GO:BP","GO:BP","GO:CC","GO:MF","GO:BP","GO:BP","GO:BP","GO:MF","GO:BP","GO:BP","GO:MF","GO:CC","GO:MF"],[512,10338,6342,6775,5407,35,11946,3959,5405,6389,12753,1453,17158,385,470,67,409,417,19431,3716,9881,284,2743,6774,12755,1028,13159,4056,2131,2719,3682,1888,6976,19354,19352,12182,12355,2128,3745,2123,24859,3663,5411,8457,3746,4883,1247,3982],["catalytic activity","carbohydrate derivative binding","purine ribonucleoside triphosphate binding","anion binding","purine ribonucleotide binding","nucleotide binding","nucleoside phosphate binding","purine nucleotide binding","ribonucleotide binding","small molecule binding","small molecule metabolic process","vesicle","interferon-gamma-mediated signaling pathway","cytoplasm","cytosol","lytic vacuole","lysosome","vacuole","cellular response to interferon-gamma","transferase activity","response to interferon-gamma","intracellular anatomical structure","extracellular exosome","ion binding","small molecule biosynthetic process","hemidesmosome","innate immune response","extracellular vesicle","extracellular organelle","extracellular membrane-bounded organelle","aspartate family amino acid metabolic process","ATP binding","carboxylic acid metabolic process","L-methionine salvage","L-methionine biosynthetic process","amino acid salvage","oxoacid metabolic process","membrane-bounded organelle","transferase activity, transferring phosphorus-containing groups","organic acid metabolic process","alpha-amino acid biosynthetic process","cellular amino acid biosynthetic process","adenyl ribonucleotide binding","response to nutrient levels","nucleoside diphosphate catabolic process","adenyl nucleotide binding","extrinsic component of cytoplasmic side of plasma membrane","nucleoside-triphosphatase activity"],["1.5e-06","2.7e-06","2.3e-05","4.1e-05","5.1e-05","5.4e-05","5.4e-05","6.0e-05","6.1e-05","1.1e-04","1.2e-04","1.3e-04","2.3e-04","2.3e-04","2.4e-04","4.8e-04","4.8e-04","1.6e-03","2.1e-03","3.0e-03","4.9e-03","9.2e-03","1.0e-02","1.1e-02","1.3e-02","1.4e-02","1.6e-02","1.9e-02","1.9e-02","1.9e-02","2.1e-02","2.2e-02","2.4e-02","2.4e-02","2.4e-02","2.4e-02","3.0e-02","3.3e-02","3.3e-02","3.7e-02","3.7e-02","3.9e-02","3.9e-02","4.0e-02","4.1e-02","4.4e-02","4.5e-02","4.8e-02"],[5682,2282,1846,2413,1917,2176,2177,1932,1934,2516,1924,4058,88,11951,5361,723,723,818,177,2341,198,14808,2178,6056,675,6,1003,2263,2265,2265,56,1500,1033,7,7,7,1066,13201,947,1098,68,69,1564,513,14,1577,103,424],[52,33,28,32,28,30,30,28,28,32,27,40,7,74,50,11,11,11,8,28,8,90,24,47,6,2,16,24,24,24,3,20,9,2,2,2,8,83,14,8,3,3,20,5,3,20,4,7]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>source<\/th>\n      <th>source_order<\/th>\n      <th>term_name<\/th>\n      <th>p_value<\/th>\n      <th>term_size<\/th>\n      <th>intersection_size<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"pageLength":10,"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background-color':value == \"GO:BP\" ? \"orange\" : value == \"GO:MF\" ? \"tomato\" : value == \"GO:CC\" ? \"lightgreen\" : value == \"KEGG\" ? \"violet\" : null});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+<div id="treemap" class="section level4 tabset tabset-fade">
+<h4>Treemap</h4>
+<div id="bp" class="section level5">
+<h5>BP</h5>
+<pre class="r"><code>if(sum(GO$result$source == &quot;GO:BP&quot;) &gt;= 5 &amp; !is.null(GO)){
+  simMatrix &lt;- GO$result %&gt;% 
+  as.data.frame() %&gt;%
+  filter(source == &quot;GO:BP&quot;) %&gt;% 
+  pull(term_id) %&gt;% 
+  calculateSimMatrix(orgdb=&quot;org.Hs.eg.db&quot;, ont=&quot;BP&quot;, method=&quot;Rel&quot;)
+
+scores &lt;- setNames(-log10(GO$result$p_value), GO$result$term_id)
+
+reducedTerms &lt;- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb=&quot;org.Hs.eg.db&quot;)
+
+treemapPlot(reducedTerms)
+BP &lt;- T
+}else{
+  print(&quot;NOT enough data.&quot;)
+  BP &lt;- F
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/BP-cond1-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mf" class="section level5">
+<h5>MF</h5>
+<pre class="r"><code>if(sum(GO$result$source == &quot;GO:MF&quot;) &gt;= 5 &amp; !is.null(GO)){
+simMatrix &lt;- GO$result %&gt;% 
+  as.data.frame() %&gt;%
+  filter(source == &quot;GO:MF&quot;) %&gt;% 
+  pull(term_id) %&gt;% 
+  calculateSimMatrix(orgdb=&quot;org.Hs.eg.db&quot;, ont=&quot;MF&quot;, method=&quot;Rel&quot;)
+
+scores &lt;- setNames(-log10(GO$result$p_value), GO$result$term_id)
+
+reducedTerms &lt;- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb=&quot;org.Hs.eg.db&quot;)
+
+treemapPlot(reducedTerms)
+MF &lt;- T
+}else{
+  print(&quot;NOT enough data.&quot;)
+  MF &lt;- F
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/MF-cond1-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cc" class="section level5">
+<h5>CC</h5>
+<pre class="r"><code>if(sum(GO$result$source == &quot;GO:CC&quot;) &gt;= 5 &amp; !is.null(GO)){
+simMatrix &lt;- GO$result %&gt;% 
+  as.data.frame() %&gt;%
+  filter(source == &quot;GO:CC&quot;) %&gt;% 
+  pull(term_id) %&gt;% 
+  calculateSimMatrix(orgdb=&quot;org.Hs.eg.db&quot;, ont=&quot;CC&quot;, method=&quot;Rel&quot;)
+
+scores &lt;- setNames(-log10(GO$result$p_value), GO$result$term_id)
+
+reducedTerms &lt;- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb=&quot;org.Hs.eg.db&quot;)
+
+treemapPlot(reducedTerms)
+CC &lt;- T
+}else{
+  print(&quot;NOT enough data.&quot;)
+  CC &lt;- F
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/CC-cond1-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="scatterplot" class="section level4">
+<h4>ScatterPlot</h4>
+<pre class="r"><code>if(BP | MF | CC){
+scatterPlot(simMatrix, reducedTerms, size = &quot;score&quot;, labelSize = 5)
+}else{
+  print(&quot;NOT enough data.&quot;)
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/scatter-cond1-1.png" width="1440" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="ovcar_wt_sph-1" class="section level3 tabset tabset-fade">
+<h3><strong>5.2. OVCAR_WT_sph</strong></h3>
+<div id="gostplot-1" class="section level4">
+<h4>Gostplot</h4>
+<p>UP regulated proteins in OVCAR_WT_sph were used to generate these gene ontologies.</p>
+<pre class="r"><code>Gname &lt;- results %&gt;% filter(significant &amp; get(paste0(test, &quot;_ratio&quot;)) &lt; 0) %&gt;% pull(name)
+
+if(!params$Imputation){
+  Uni &lt;- unique_pair(data_filt_unique, conditions = conditions, table = T) %&gt;% 
+  filter(!!sym(paste0(&quot;unique_&quot;, cond_2)) == &quot;+&quot;) %&gt;% 
+  pull(name) %&gt;% unique()
+
+  Gname &lt;- c(Gname, Uni)
+}
+
+if(length(Gname) == 0){
+  print(&quot;NOT enough data.&quot;)
+}else{
+  GO &lt;- gost(query = Gname, organism = &quot;hsapiens&quot;, sources = c(&quot;GO:BP&quot;, &quot;GO:MF&quot;, &quot;GO:CC&quot;, &quot;KEGG&quot;), ordered_query = T, evcodes = TRUE)
+  if(is.null(GO)){
+    print(&quot;NOT enough data.&quot;)
+  }else{
+    gostplot(GO, capped = TRUE, interactive = TRUE)
+  }
+}</code></pre>
+<div id="htmlwidget-454929a56e939b13f92b" style="width:960px;height:768px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-454929a56e939b13f92b">{"x":{"data":[{"x":[126.401856989695,149.030390957273,123.04211087035,78.8152089926941,97.6040331095911,79.4161391929022,120.302805671998,117.965421321838,165.290625660307,124.817586461874,122.991382996306,86.213674314737,110.863518955742,78.7839918394365,79.4083349045878,137.733683622191,77.3089813480166,78.7800896952793,136.574746807504,160.565129085943,102.528539035972,105.404419279825,122.566049283172,126.788169261257,187.240186544532,131.642436592809,136.360128878858,97.2216229821859,134.967063414739,137.764900775449,187.236284400375,120.396457131771,85.6595698444152,85.3200833027392,79.4044327604306,88.9998052429747,149.038195245587],"y":[3.42779949747517,3.19325628525907,3.18941265269142,3.13560651630698,3.1106696616189,3.00912705120138,2.98840222891475,2.91664193421541,2.8897262609768,2.69242538887061,2.63159571696876,2.59962798084683,2.59860880626762,2.50061068860515,2.44571554999024,2.4264096480989,2.42215186087279,2.20869356753451,2.20433293327537,2.16661388594374,2.1398867327238,2.04435827532052,2.03382593083916,2.01285219671974,1.9447004568071,1.91736160118543,1.8496998828084,1.84863317744137,1.83118735715885,1.7509893758543,1.6320239895081,1.52709708278628,1.49009444901946,1.41141323872026,1.40077948095908,1.39687656292309,1.38062231875537],"text":["GO:0045055 (790) <br> regulated exocytosis <br> 3.734e-04","GO:0070486 (13) <br> leukocyte aggregation <br> 6.408e-04","GO:0043312 (483) <br> neutrophil degranulation <br> 6.465e-04","GO:0002283 (488) <br> neutrophil activation involved in immune response <br> 7.318e-04","GO:0016192 (2193) <br> vesicle-mediated transport <br> 7.751e-04","GO:0002446 (500) <br> neutrophil mediated immunity <br> 9.792e-04","GO:0042119 (502) <br> neutrophil activation <br> 1.027e-03","GO:0036230 (509) <br> granulocyte activation <br> 1.212e-03","GO:0140352 (1413) <br> export from cell <br> 1.289e-03","GO:0044255 (1079) <br> cellular lipid metabolic process <br> 2.030e-03","GO:0043299 (538) <br> leukocyte degranulation <br> 2.336e-03","GO:0006887 (906) <br> exocytosis <br> 2.514e-03","GO:0032940 (1351) <br> secretion by cell <br> 2.520e-03","GO:0002275 (552) <br> myeloid cell activation involved in immune response <br> 3.158e-03","GO:0002444 (558) <br> myeloid leukocyte mediated immunity <br> 3.583e-03","GO:0051641 (3519) <br> cellular localization <br> 3.746e-03","GO:0001775 (1507) <br> cell activation <br> 3.783e-03","GO:0002274 (671) <br> myeloid leukocyte activation <br> 6.185e-03","GO:0051248 (1216) <br> negative regulation of protein metabolic process <br> 6.247e-03","GO:0097435 (863) <br> supramolecular fiber organization <br> 6.814e-03","GO:0019915 (86) <br> lipid storage <br> 7.246e-03","GO:0030198 (419) <br> extracellular matrix organization <br> 9.029e-03","GO:0043062 (420) <br> extracellular structure organization <br> 9.251e-03","GO:0045229 (422) <br> external encapsulating structure organization <br> 9.708e-03","GO:1905907 (12) <br> negative regulation of amyloid fibril formation <br> 1.136e-02","GO:0046903 (1492) <br> secretion <br> 1.210e-02","GO:0051179 (6938) <br> localization <br> 1.414e-02","GO:0016042 (348) <br> lipid catabolic process <br> 1.417e-02","GO:0050746 (15) <br> regulation of lipoprotein metabolic process <br> 1.475e-02","GO:0051649 (2778) <br> establishment of localization in cell <br> 1.774e-02","GO:1905906 (15) <br> regulation of amyloid fibril formation <br> 2.333e-02","GO:0042157 (136) <br> lipoprotein metabolic process <br> 2.971e-02","GO:0006720 (144) <br> isoprenoid metabolic process <br> 3.235e-02","GO:0006629 (1446) <br> lipid metabolic process <br> 3.878e-02","GO:0002443 (888) <br> leukocyte mediated immunity <br> 3.974e-02","GO:0008203 (146) <br> cholesterol metabolic process <br> 4.010e-02","GO:0070488 (2) <br> neutrophil aggregation <br> 4.163e-02"],"key":["GO:0045055","GO:0070486","GO:0043312","GO:0002283","GO:0016192","GO:0002446","GO:0042119","GO:0036230","GO:0140352","GO:0044255","GO:0043299","GO:0006887","GO:0032940","GO:0002275","GO:0002444","GO:0051641","GO:0001775","GO:0002274","GO:0051248","GO:0097435","GO:0019915","GO:0030198","GO:0043062","GO:0045229","GO:1905907","GO:0046903","GO:0051179","GO:0016042","GO:0050746","GO:0051649","GO:1905906","GO:0042157","GO:0006720","GO:0006629","GO:0002443","GO:0008203","GO:0070488"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[19.2600018955208,12.4412469479671,18.609367044494,18.6232781866,20.5297041084802,18.6560402520018,18.6614171464117,18.6800539816722,19.9952668691908,19.6584726927001,18.7543947502514,19.4363650611617,19.9397170643226,18.788735757365,18.8031640286352,21.0862719030328,20.0746712736595,19.0471784086146,19.8086252196769,19.3740007383699,16.0578025627736,18.4160117151406,18.41927534827,18.4257771986076,12.254025725742,20.0623636974978,21.8552699322811,18.1595388624734,12.766247544801,20.8102706711732,12.766247544801,16.7843679978129,16.8721549697602,20.0237737053134,19.4106572227896,16.8932514785907,3.77952755905512],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedData29a56e93","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[64.5244030636107,69.6488993741428,64.4307336717959,62.1358335723345,59.4896732535677,55.3213853178112,54.9037759459705,57.0074343704768,54.7593689669227,68.0994515178737,55.891207451351,58.1822046594868,57.0113372618024,64.6102666727742,58.9783944899122,67.4671831231242,59.193053512821,55.4853067534871,58.5685909007227,54.0802658762658,55.415054709626,67.7989288858014,58.0338947891135,58.0495063544159,55.4462778402309,58.1002439416489,59.7823901029888,58.2095248987661,57.8231386575303,68.8839326743223,55.9653623865377,60.6878608905314,57.8270415488559,61.9875237019611,56.9059591960108,59.5521195147776,67.802831777127,57.8192357662046,55.5282385580688,68.5717013682731,63.3535356659263,57.1830644801295,61.7845733530292,60.6839579992058,61.199139654187,61.2069454368382,55.8287611901412,58.7637354670034,62.0070381585892,56.894250522034,61.2030425455126,61.7221270918193,58.2017191161149,58.018283223811,63.3574385572519,56.9215707613133,58.2173306814173,55.5048212101151,68.0799370612457,55.4189576009516,59.497479036219,56.2385647793307,58.7442210103753,66.0426277892748,58.7403181190497,57.1869673714551,57.1362297842221,67.8301520164063,62.120222007032,58.0143803324854,57.0464632837329,59.4935761448933,63.5564860148582,54.9271932939242],"y":[11.2715551001205,10.7054832723538,10.6924865143956,10.6924865143956,10.6796172388916,8.33943633638206,7.79650969077455,7.02322326907931,6.2432518988249,5.483227419972,5.37140526917314,4.70459459891689,4.46819183124041,4.3268438338019,4.27880957949559,4.2577361048296,4.22213422205118,4.0898911290695,4.06526070712824,3.89268675246243,3.89268675246243,3.84631718505627,3.28951668149883,3.24277190378947,3.15762162049556,3.15677533075087,3.00095862136081,2.86284484146289,2.80112554108779,2.79949638734628,2.72378574494394,2.71073895168009,2.66093837572701,2.65402986635266,2.59338175884018,2.47666032299725,2.42254292144284,2.41965067615876,2.40760802921131,2.38323822313524,2.33802275304975,2.30427274379388,2.2627844076342,2.25206469771461,2.25206469771461,2.25206469771461,2.24321015053391,2.1617501386563,2.1202786589296,1.9769848730992,1.95175281553186,1.87686958576234,1.80054181224945,1.77939438561643,1.76397601941944,1.73924123708074,1.73250766941972,1.72791319154775,1.71060062147778,1.71060062147778,1.6397836337395,1.63530906951754,1.59295079172453,1.54285262150043,1.52489457302335,1.45994566929227,1.45871316326469,1.44440000264596,1.44029845105488,1.43196711167544,1.41722943483571,1.40941764758586,1.37361909726852,1.30572305284775],"text":["GO:0070062 (2178) <br> extracellular exosome <br> 5.351e-12","GO:1903561 (2263) <br> extracellular vesicle <br> 1.970e-11","GO:0065010 (2265) <br> extracellular membrane-bounded organelle <br> 2.030e-11","GO:0043230 (2265) <br> extracellular organelle <br> 2.030e-11","GO:0031982 (4058) <br> vesicle <br> 2.091e-11","GO:0005737 (11951) <br> cytoplasm <br> 4.577e-09","GO:0005615 (3595) <br> extracellular space <br> 1.598e-08","GO:0012505 (4651) <br> endomembrane system <br> 9.479e-08","GO:0005576 (4564) <br> extracellular region <br> 5.711e-07","GO:0098858 (217) <br> actin-based cell projection <br> 3.287e-06","GO:0005902 (89) <br> microvillus <br> 4.252e-06","GO:0030659 (789) <br> cytoplasmic vesicle membrane <br> 1.974e-05","GO:0012506 (1183) <br> vesicle membrane <br> 3.403e-05","GO:0070161 (838) <br> anchoring junction <br> 4.711e-05","GO:0031410 (2433) <br> cytoplasmic vesicle <br> 5.262e-05","GO:0097708 (2438) <br> intracellular vesicle <br> 5.524e-05","GO:0031528 (27) <br> microvillus membrane <br> 5.996e-05","GO:0005783 (1995) <br> endoplasmic reticulum <br> 8.130e-05","GO:0031090 (3644) <br> organelle membrane <br> 8.605e-05","GO:0000323 (723) <br> lytic vacuole <br> 1.280e-04","GO:0005764 (723) <br> lysosome <br> 1.280e-04","GO:0098588 (2165) <br> bounding membrane of organelle <br> 1.425e-04","GO:0030141 (857) <br> secretory granule <br> 5.134e-04","GO:0030175 (106) <br> filopodium <br> 5.718e-04","GO:0005773 (818) <br> vacuole <br> 6.956e-04","GO:0030315 (53) <br> T-tubule <br> 6.970e-04","GO:0032432 (78) <br> actin filament bundle <br> 9.978e-04","GO:0030667 (308) <br> secretory granule membrane <br> 1.371e-03","GO:0030054 (2107) <br> cell junction <br> 1.581e-03","GO:0120025 (2234) <br> plasma membrane bounded cell projection <br> 1.587e-03","GO:0005925 (420) <br> focal adhesion <br> 1.889e-03","GO:0034684 (2) <br> integrin alphav-beta5 complex <br> 1.947e-03","GO:0030055 (427) <br> cell-substrate junction <br> 2.183e-03","GO:0042995 (2337) <br> cell projection <br> 2.218e-03","GO:0009986 (896) <br> cell surface <br> 2.550e-03","GO:0032059 (9) <br> bleb <br> 3.337e-03","GO:0098590 (1240) <br> plasma membrane region <br> 3.780e-03","GO:0030027 (203) <br> lamellipodium <br> 3.805e-03","GO:0005794 (1593) <br> Golgi apparatus <br> 3.912e-03","GO:0099503 (1027) <br> secretory vesicle <br> 4.138e-03","GO:0045177 (433) <br> apical part of cell <br> 4.592e-03","GO:0016323 (225) <br> basolateral plasma membrane <br> 4.963e-03","GO:0042581 (158) <br> specific granule <br> 5.460e-03","GO:0034683 (3) <br> integrin alphav-beta3 complex <br> 5.597e-03","GO:0035866 (3) <br> alphav-beta3 integrin-PKCalpha complex <br> 5.597e-03","GO:0035868 (3) <br> alphav-beta3 integrin-HMGB1 complex <br> 5.597e-03","GO:0005886 (5680) <br> plasma membrane <br> 5.712e-03","GO:0031258 (22) <br> lamellipodium membrane <br> 6.890e-03","GO:0043034 (19) <br> costamere <br> 7.581e-03","GO:0009925 (250) <br> basal plasma membrane <br> 1.054e-02","GO:0035867 (4) <br> alphav-beta3 integrin-IGF-1-IGF1R complex <br> 1.117e-02","GO:0042383 (141) <br> sarcolemma <br> 1.328e-02","GO:0030665 (114) <br> clathrin-coated vesicle membrane <br> 1.583e-02","GO:0030136 (194) <br> clathrin-coated vesicle <br> 1.662e-02","GO:0045178 (268) <br> basal part of cell <br> 1.722e-02","GO:0010008 (520) <br> endosome membrane <br> 1.823e-02","GO:0030669 (72) <br> clathrin-coated endocytic vesicle membrane <br> 1.851e-02","GO:0005788 (313) <br> endoplasmic reticulum lumen <br> 1.871e-02","GO:0098852 (395) <br> lytic vacuole membrane <br> 1.947e-02","GO:0005765 (395) <br> lysosomal membrane <br> 1.947e-02","GO:0031984 (1764) <br> organelle subcompartment <br> 2.292e-02","GO:0008305 (32) <br> integrin complex <br> 2.316e-02","GO:0031253 (346) <br> cell projection membrane <br> 2.553e-02","GO:0071944 (6178) <br> cell periphery <br> 2.865e-02","GO:0031252 (426) <br> cell leading edge <br> 2.986e-02","GO:0016324 (364) <br> apical plasma membrane <br> 3.468e-02","GO:0016020 (9829) <br> membrane <br> 3.478e-02","GO:0098636 (37) <br> protein complex involved in cell adhesion <br> 3.594e-02","GO:0043226 (14027) <br> organelle <br> 3.628e-02","GO:0030135 (296) <br> coated vesicle <br> 3.699e-02","GO:0014704 (54) <br> intercalated disc <br> 3.826e-02","GO:0031983 (326) <br> vesicle lumen <br> 3.896e-02","GO:0045334 (89) <br> clathrin-coated endocytic vesicle <br> 4.230e-02","GO:0005622 (14808) <br> intracellular anatomical structure <br> 4.946e-02"],"key":["GO:0070062","GO:1903561","GO:0065010","GO:0043230","GO:0031982","GO:0005737","GO:0005615","GO:0012505","GO:0005576","GO:0098858","GO:0005902","GO:0030659","GO:0012506","GO:0070161","GO:0031410","GO:0097708","GO:0031528","GO:0005783","GO:0031090","GO:0000323","GO:0005764","GO:0098588","GO:0030141","GO:0030175","GO:0005773","GO:0030315","GO:0032432","GO:0030667","GO:0030054","GO:0120025","GO:0005925","GO:0034684","GO:0030055","GO:0042995","GO:0009986","GO:0032059","GO:0098590","GO:0030027","GO:0005794","GO:0099503","GO:0045177","GO:0016323","GO:0042581","GO:0034683","GO:0035866","GO:0035868","GO:0005886","GO:0031258","GO:0043034","GO:0009925","GO:0035867","GO:0042383","GO:0030665","GO:0030136","GO:0045178","GO:0010008","GO:0030669","GO:0005788","GO:0098852","GO:0005765","GO:0031984","GO:0008305","GO:0031253","GO:0071944","GO:0031252","GO:0016324","GO:0016020","GO:0098636","GO:0043226","GO:0030135","GO:0014704","GO:0031983","GO:0045334","GO:0005622"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[20.5214902439301,20.5672559227953,20.5683104706776,20.5683104706776,21.250520850314,22.4484604312869,21.1109970585917,21.4062815734808,21.384799437161,17.4855057979174,16.1136431816444,19.2583620424432,19.774188875036,19.3361763823889,20.6535046726708,20.6559427724165,13.9932800960407,20.4161019665841,21.1266444165659,19.1448417015984,19.1448417015984,20.5143223808468,19.3650320892764,16.394472388579,19.3050263840062,15.2405126341149,15.8973863612294,17.9883493723974,20.4817706635075,20.5518518073364,18.41927534827,3.77952755905512,18.4418855248262,20.6056241461277,19.4221518872928,11.5439512898152,19.833042946904,17.3876399430454,20.1427845172809,19.5960108346389,18.4609454905787,17.5383402391376,17.0134143816997,7.81088103584182,7.81088103584182,7.81088103584182,21.6320787809657,13.5832101454551,13.2787931541743,17.6909608332441,9.05045292005097,16.8398886539314,16.5095380077466,17.3206905810587,17.7907627740747,18.7087830831335,15.7642778006896,18.0110444301719,18.3350224500158,18.3350224500158,20.267193434116,14.3213782810468,18.1515039320334,21.7261763418418,18.4386804137039,18.2220502611965,22.2374238416628,14.5938600426124,22.6196160803639,17.9321863039161,15.2731516632256,18.0682354374322,16.1136431816444,22.6771653543307],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedData29a56e93","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[29.8158352934032,9.64076957133607,3.10436046408994,48.0553434529664,2.99119278402419,23.4199102027904,27.813938056378,3.82238988243817,37.4800188675115,9.33248520150178,23.3340588592923,19.9156144545474,41.1247986323879,41.1287009661832,9.34809453668326,8.5403114410415,20.0834148077484,27.5290676893159,37.4331908619671],"y":[5.18344125429159,4.07412034576823,3.05656149128176,3.02298279378129,2.83096754854292,2.7879143641897,2.64881724265472,2.14463931922273,2.1034811570708,1.96111721266296,1.83643324356708,1.75140246417845,1.54193743156956,1.54193743156956,1.50270230462455,1.47282634028653,1.44759176136223,1.44759176136223,1.43739545017907],"text":["GO:0044877 (1304) <br> protein-containing complex binding <br> 6.555e-06","GO:0008092 (1001) <br> cytoskeletal protein binding <br> 8.431e-05","GO:0001618 (76) <br> virus receptor activity <br> 8.779e-04","GO:0140272 (77) <br> exogenous protein binding <br> 9.485e-04","GO:0001540 (83) <br> amyloid-beta binding <br> 1.476e-03","GO:0033293 (73) <br> monocarboxylic acid binding <br> 1.630e-03","GO:0042277 (312) <br> peptide binding <br> 2.245e-03","GO:0003779 (449) <br> actin binding <br> 7.167e-03","GO:0051015 (213) <br> actin filament binding <br> 7.880e-03","GO:0005516 (203) <br> calmodulin binding <br> 1.094e-02","GO:0033218 (387) <br> amide binding <br> 1.457e-02","GO:0019838 (141) <br> growth factor binding <br> 1.773e-02","GO:0071813 (37) <br> lipoprotein particle binding <br> 2.871e-02","GO:0071814 (37) <br> protein-lipid complex binding <br> 2.871e-02","GO:0005520 (29) <br> insulin-like growth factor binding <br> 3.143e-02","GO:0005178 (146) <br> integrin binding <br> 3.366e-02","GO:0019960 (5) <br> C-X3-C chemokine binding <br> 3.568e-02","GO:0038132 (5) <br> neuregulin binding <br> 3.568e-02","GO:0050839 (544) <br> cell adhesion molecule binding <br> 3.653e-02"],"key":["GO:0044877","GO:0008092","GO:0001618","GO:0140272","GO:0001540","GO:0033293","GO:0042277","GO:0003779","GO:0051015","GO:0005516","GO:0033218","GO:0019838","GO:0071813","GO:0071814","GO:0005520","GO:0005178","GO:0019960","GO:0038132","GO:0050839"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[19.8957455135249,19.5634860592025,15.8543507531641,15.8760274247573,15.9997101118596,15.7873208982415,18.006537444193,18.5103934714585,17.4582741483727,17.3876399430454,18.3068230037595,16.8398886539314,14.5938600426124,14.5938600426124,14.1325441121217,16.8932514785907,9.83978094370953,9.83978094370953,18.7692301298177],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedData29a56e93","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[199.018789738613],"y":[1.64813735490137],"text":"KEGG:04512 (88) <br> ECM-receptor interaction <br> 2.248e-02","key":["KEGG:04512"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(221,68,119,1)","opacity":0.8,"size":16.0952695414637,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(221,68,119,1)"}},"hoveron":"points","set":"SharedData29a56e93","name":"KEGG","legendgroup":"KEGG","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,49.9206590071537],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[53.8226750487752,71.2217645783655],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[75.123780619987,193.971385215695],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[197.873401257316,200.003902016042],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(221,68,119,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[180],"y":[16.2],"text":"values above this threshold are capped","hovertext":"","textfont":{"size":7.55905511811024,"color":"rgba(190,190,190,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,210],"y":[16,16],"text":"","type":"scatter","mode":"lines","line":{"width":0.755905511811024,"color":"rgba(190,190,190,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":51.8931100989696,"l":61.0377750103778},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP","KEGG"],"tickvals":[25.9603295035768,62.5222198135703,134.547582917841,198.938651636679],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP","KEGG"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,18.5],"tickmode":"array","ticktext":["0","2","4","6","8","10","12","14",">16"],"tickvals":[0,2,4,6,8,10,12,14,16],"categoryorder":"array","categoryarray":["0","2","4","6","8","10","12","14",">16"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":-0.0108706932337069,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis"},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"4144b385ca4":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"4144532e7538":{"x":{},"xend":{},"y":{},"yend":{}},"414426f02dd7":{"x":{},"xend":{},"y":{},"yend":{}},"4144661a2c5d":{"x":{},"xend":{},"y":{},"yend":{}},"41447b444647":{"x":{},"xend":{},"y":{},"yend":{}},"4144447e22ae":{"x":{},"y":{}},"414444a11557":{"yintercept":{}}},"cur_data":"4144b385ca4","visdat":{"4144b385ca4":["function (y) ","x"],"4144532e7538":["function (y) ","x"],"414426f02dd7":["function (y) ","x"],"4144661a2c5d":["function (y) ","x"],"41447b444647":["function (y) ","x"],"4144447e22ae":["function (y) ","x"],"414444a11557":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedData29a56e93"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="table-results-1" class="section level4">
+<h4>Table results</h4>
+<p>The results can also be visualized with a table:</p>
+<pre class="r"><code>if(is.null(GO)){
+  print(&quot;NOT enough data.&quot;)
+}else{
+  GO$result %&gt;% 
+    as.data.frame() %&gt;% 
+    select(starts_with(c(&quot;source&quot;, &quot;term_name&quot;, &quot;p_value&quot;, &quot;term_size&quot;, &quot;intersection_size&quot;))) %&gt;% 
+    arrange(p_value) %&gt;%  
+    mutate(p_value = format(p_value, scientific = T, digits = 2)) %&gt;% 
+    DT::datatable(options = list(
+    columnDefs = list(list(className = &#39;dt-center&#39;, targets = 1:6)),
+    pageLength = 10)) %&gt;%
+    formatStyle(&#39;source&#39;, backgroundColor = styleEqual(c(&quot;GO:BP&quot;, &quot;GO:MF&quot;, &quot;GO:CC&quot;, &quot;KEGG&quot;), c(&#39;orange&#39;, &#39;tomato&#39;, &#39;lightgreen&#39;, &#39;violet&#39;)))
+}</code></pre>
+<div id="htmlwidget-7856457827ab1876f7c5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7856457827ab1876f7c5">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131"],["GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:MF","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:MF","GO:CC","GO:CC","GO:CC","GO:CC","GO:BP","GO:CC","GO:CC","GO:BP","GO:BP","GO:CC","GO:CC","GO:BP","GO:BP","GO:MF","GO:MF","GO:BP","GO:CC","GO:BP","GO:BP","GO:BP","GO:CC","GO:MF","GO:CC","GO:CC","GO:MF","GO:CC","GO:CC","GO:BP","GO:CC","GO:CC","GO:MF","GO:BP","GO:BP","GO:BP","GO:CC","GO:BP","GO:CC","GO:BP","GO:BP","GO:CC","GO:BP","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","GO:BP","GO:BP","GO:BP","GO:CC","GO:MF","GO:BP","GO:CC","GO:MF","GO:BP","GO:BP","GO:BP","GO:CC","GO:MF","GO:CC","GO:BP","GO:BP","GO:CC","GO:BP","GO:BP","GO:MF","GO:BP","GO:CC","GO:CC","GO:CC","GO:MF","GO:BP","GO:CC","GO:CC","GO:CC","GO:CC","GO:CC","KEGG","GO:CC","GO:CC","GO:BP","GO:CC","GO:CC","GO:MF","GO:MF","GO:BP","GO:CC","GO:MF","GO:BP","GO:MF","GO:CC","GO:CC","GO:MF","GO:MF","GO:CC","GO:CC","GO:MF","GO:CC","GO:CC","GO:BP","GO:CC","GO:BP","GO:BP","GO:BP","GO:CC","GO:CC"],[2743,4056,2719,2131,1453,385,278,817,241,3659,531,7129,1118,818,2765,1322,3497,1377,427,1959,1217,67,409,3582,13142,1080,1084,18941,12281,417,1097,947,5762,284,11803,1101,1528,11579,10980,23108,1125,255,1026,3860,5490,550,1760,12736,1027,2093,6616,12268,2843,9160,791,939,1469,1099,16046,3583,561,1025,438,3780,2443,862,2041,1759,1891,1893,515,938,15749,21897,1267,468,7024,2098,9093,7761,12159,13241,788,1880,1892,28733,14485,2025,15694,5664,5468,15337,1123,1076,2444,4592,16054,795,1127,432,3654,410,294,1455,620,28732,1262,3132,10027,10028,11603,1261,1884,2701,1677,863,850,4635,6543,3590,2127,9081,1075,827,2614,1454,1098,3557,18943,2495,284],["extracellular exosome","extracellular vesicle","extracellular membrane-bounded organelle","extracellular organelle","vesicle","cytoplasm","extracellular space","endomembrane system","extracellular region","actin-based cell projection","microvillus","protein-containing complex binding","cytoplasmic vesicle membrane","vesicle membrane","anchoring junction","cytoplasmic vesicle","intracellular vesicle","microvillus membrane","endoplasmic reticulum","cytoskeletal protein binding","organelle membrane","lytic vacuole","lysosome","bounding membrane of organelle","regulated exocytosis","secretory granule","filopodium","leukocyte aggregation","neutrophil degranulation","vacuole","T-tubule","neutrophil activation involved in immune response","vesicle-mediated transport","virus receptor activity","exogenous protein binding","neutrophil mediated immunity","actin filament bundle","neutrophil activation","granulocyte activation","export from cell","secretory granule membrane","amyloid-beta binding","cell junction","plasma membrane bounded cell projection","monocarboxylic acid binding","focal adhesion","integrin alphav-beta5 complex","cellular lipid metabolic process","cell-substrate junction","cell projection","peptide binding","leukocyte degranulation","exocytosis","secretion by cell","cell surface","myeloid cell activation involved in immune response","bleb","myeloid leukocyte mediated immunity","cellular localization","plasma membrane region","cell activation","lamellipodium","Golgi apparatus","secretory vesicle","apical part of cell","basolateral plasma membrane","specific granule","integrin alphav-beta3 complex","alphav-beta3 integrin-PKCalpha complex","alphav-beta3 integrin-HMGB1 complex","plasma membrane","myeloid leukocyte activation","negative regulation of protein metabolic process","supramolecular fiber organization","lamellipodium membrane","actin binding","lipid storage","costamere","actin filament binding","extracellular matrix organization","extracellular structure organization","external encapsulating structure organization","basal plasma membrane","calmodulin binding","alphav-beta3 integrin-IGF-1-IGF1R complex","negative regulation of amyloid fibril formation","secretion","sarcolemma","localization","lipid catabolic process","amide binding","regulation of lipoprotein metabolic process","clathrin-coated vesicle membrane","clathrin-coated vesicle","basal part of cell","growth factor binding","establishment of localization in cell","endosome membrane","clathrin-coated endocytic vesicle membrane","endoplasmic reticulum lumen","lytic vacuole membrane","lysosomal membrane","ECM-receptor interaction","organelle subcompartment","integrin complex","regulation of amyloid fibril formation","cell projection membrane","cell periphery","lipoprotein particle binding","protein-lipid complex binding","lipoprotein metabolic process","cell leading edge","insulin-like growth factor binding","isoprenoid metabolic process","integrin binding","apical plasma membrane","membrane","C-X3-C chemokine binding","neuregulin binding","protein complex involved in cell adhesion","organelle","cell adhesion molecule binding","coated vesicle","intercalated disc","lipid metabolic process","vesicle lumen","leukocyte mediated immunity","cholesterol metabolic process","neutrophil aggregation","clathrin-coated endocytic vesicle","intracellular anatomical structure"],["5.4e-12","2.0e-11","2.0e-11","2.0e-11","2.1e-11","4.6e-09","1.6e-08","9.5e-08","5.7e-07","3.3e-06","4.3e-06","6.6e-06","2.0e-05","3.4e-05","4.7e-05","5.3e-05","5.5e-05","6.0e-05","8.1e-05","8.4e-05","8.6e-05","1.3e-04","1.3e-04","1.4e-04","3.7e-04","5.1e-04","5.7e-04","6.4e-04","6.5e-04","7.0e-04","7.0e-04","7.3e-04","7.8e-04","8.8e-04","9.5e-04","9.8e-04","1.0e-03","1.0e-03","1.2e-03","1.3e-03","1.4e-03","1.5e-03","1.6e-03","1.6e-03","1.6e-03","1.9e-03","1.9e-03","2.0e-03","2.2e-03","2.2e-03","2.2e-03","2.3e-03","2.5e-03","2.5e-03","2.6e-03","3.2e-03","3.3e-03","3.6e-03","3.7e-03","3.8e-03","3.8e-03","3.8e-03","3.9e-03","4.1e-03","4.6e-03","5.0e-03","5.5e-03","5.6e-03","5.6e-03","5.6e-03","5.7e-03","6.2e-03","6.2e-03","6.8e-03","6.9e-03","7.2e-03","7.2e-03","7.6e-03","7.9e-03","9.0e-03","9.3e-03","9.7e-03","1.1e-02","1.1e-02","1.1e-02","1.1e-02","1.2e-02","1.3e-02","1.4e-02","1.4e-02","1.5e-02","1.5e-02","1.6e-02","1.7e-02","1.7e-02","1.8e-02","1.8e-02","1.8e-02","1.9e-02","1.9e-02","1.9e-02","1.9e-02","2.2e-02","2.3e-02","2.3e-02","2.3e-02","2.6e-02","2.9e-02","2.9e-02","2.9e-02","3.0e-02","3.0e-02","3.1e-02","3.2e-02","3.4e-02","3.5e-02","3.5e-02","3.6e-02","3.6e-02","3.6e-02","3.6e-02","3.7e-02","3.7e-02","3.8e-02","3.9e-02","3.9e-02","4.0e-02","4.0e-02","4.2e-02","4.2e-02","4.9e-02"],[2178,2263,2265,2265,4058,11951,3595,4651,4564,217,89,1304,789,1183,838,2433,2438,27,1995,1001,3644,723,723,2165,790,857,106,13,483,818,53,488,2193,76,77,500,78,502,509,1413,308,83,2107,2234,73,420,2,1079,427,2337,312,538,906,1351,896,552,9,558,3519,1240,1507,203,1593,1027,433,225,158,3,3,3,5680,671,1216,863,22,449,86,19,213,419,420,422,250,203,4,12,1492,141,6938,348,387,15,114,194,268,141,2778,520,72,313,395,395,88,1764,32,15,346,6178,37,37,136,426,29,144,146,364,9829,5,5,37,14027,544,296,54,1446,326,888,146,2,89,14808],[41,41,41,41,56,97,50,56,51,11,8,19,19,23,16,33,33,5,30,19,43,17,17,31,17,16,6,4,14,17,3,14,32,6,6,14,6,14,14,22,10,6,27,18,6,10,2,19,10,30,10,14,17,21,16,14,3,14,40,20,22,6,23,18,11,8,7,2,2,2,50,15,15,13,3,10,6,2,7,12,12,12,8,8,2,3,21,3,63,10,10,3,5,7,8,5,30,11,4,9,10,10,5,20,3,3,9,51,4,4,6,7,3,7,5,9,74,2,2,3,95,10,8,3,20,8,15,7,2,4,98]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>source<\/th>\n      <th>source_order<\/th>\n      <th>term_name<\/th>\n      <th>p_value<\/th>\n      <th>term_size<\/th>\n      <th>intersection_size<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"pageLength":10,"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background-color':value == \"GO:BP\" ? \"orange\" : value == \"GO:MF\" ? \"tomato\" : value == \"GO:CC\" ? \"lightgreen\" : value == \"KEGG\" ? \"violet\" : null});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+<div id="treemap-1" class="section level4 tabset tabset-fade">
+<h4>Treemap</h4>
+<div id="bp-1" class="section level5">
+<h5>BP</h5>
+<pre class="r"><code>if(sum(GO$result$source == &quot;GO:BP&quot;) &gt;= 5 &amp; !is.null(GO)){
+  simMatrix &lt;- GO$result %&gt;% 
+  as.data.frame() %&gt;%
+  filter(source == &quot;GO:BP&quot;) %&gt;% 
+  pull(term_id) %&gt;% 
+  calculateSimMatrix(orgdb=&quot;org.Hs.eg.db&quot;, ont=&quot;BP&quot;, method=&quot;Rel&quot;)
+
+scores &lt;- setNames(-log10(GO$result$p_value), GO$result$term_id)
+
+reducedTerms &lt;- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb=&quot;org.Hs.eg.db&quot;)
+
+treemapPlot(reducedTerms)
+BP &lt;- T
+}else{
+  print(&quot;NOT enough data.&quot;)
+  BP &lt;- F
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/BP-cond2-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mf-1" class="section level5">
+<h5>MF</h5>
+<pre class="r"><code>if(sum(GO$result$source == &quot;GO:MF&quot;) &gt;= 5 &amp; !is.null(GO)){
+simMatrix &lt;- GO$result %&gt;% 
+  as.data.frame() %&gt;%
+  filter(source == &quot;GO:MF&quot;) %&gt;% 
+  pull(term_id) %&gt;% 
+  calculateSimMatrix(orgdb=&quot;org.Hs.eg.db&quot;, ont=&quot;MF&quot;, method=&quot;Rel&quot;)
+
+scores &lt;- setNames(-log10(GO$result$p_value), GO$result$term_id)
+
+reducedTerms &lt;- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb=&quot;org.Hs.eg.db&quot;)
+
+treemapPlot(reducedTerms)
+MF &lt;- T
+}else{
+  print(&quot;NOT enough data.&quot;)
+  MF &lt;- F
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/MF-cond2-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cc-1" class="section level5">
+<h5>CC</h5>
+<pre class="r"><code>if(sum(GO$result$source == &quot;GO:CC&quot;) &gt;= 5 &amp; !is.null(GO)){
+simMatrix &lt;- GO$result %&gt;% 
+  as.data.frame() %&gt;%
+  filter(source == &quot;GO:CC&quot;) %&gt;% 
+  pull(term_id) %&gt;% 
+  calculateSimMatrix(orgdb=&quot;org.Hs.eg.db&quot;, ont=&quot;CC&quot;, method=&quot;Rel&quot;)
+
+scores &lt;- setNames(-log10(GO$result$p_value), GO$result$term_id)
+
+reducedTerms &lt;- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb=&quot;org.Hs.eg.db&quot;)
+
+treemapPlot(reducedTerms)
+CC &lt;- T
+}else{
+  print(&quot;NOT enough data.&quot;)
+  CC &lt;- F
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/CC-cond2-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="scatterplot-1" class="section level4">
+<h4>ScatterPlot</h4>
+<pre class="r"><code>if(BP | MF | CC){
+scatterPlot(simMatrix, reducedTerms, size = &quot;score&quot;, labelSize = 5)
+}else{
+  print(&quot;NOT enough data.&quot;)
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/scatter-cond2-1.png" width="1440" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="network-analysis" class="section level2">
+<h2><strong>6. Network analysis</strong></h2>
+<p>Overview from <strong>STRING Database</strong>: In STRING, each protein-protein interaction is annotated with one or more ‘scores’. Importantly, these scores do <strong>not</strong> indicate the strength or the specificity of the interaction. Instead, they are indicators of <strong>confidence</strong>, i.e. how likely STRING judges an interaction to be true, given the available evidence. All scores rank from 0 to 1, with 1 being the highest possible confidence. A score of 0.5 would indicate that roughly every second interaction might be erroneous (i.e., a false positive).</p>
+<pre class="r"><code>if(leng_dep != 0){
+  
+  string_db &lt;- STRINGdb$new(version=&quot;11&quot;, species=9606, score_threshold=400)
+
+  string_mapped &lt;- string_db$map(string_res, &quot;Gene.name&quot;, removeUnmappedRows = TRUE, quiet = T)
+
+  hits &lt;- string_mapped$STRING_id[1:leng_dep]
+
+  string_db$plot_network(hits, add_link = T)
+}else{
+  print(&quot;NOT enough data.&quot;)
+}</code></pre>
+<p><img src="figure/Template_LFQ_OVCAR_sph.Rmd/stringdb-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<div id="cytoscape-network" class="section level3">
+<h3><strong>6.1. Cytoscape Network</strong></h3>
+<p>Cytoscape is an open source software platform for visualizing complex networks and integrating these with any type of attribute data. In this presentation all proteins showing at least one confidence level from the STRING database are shown. The <strong>color</strong> code is relative to <strong>fold change</strong> and the <strong>size</strong> is directly proportional to the <strong>significance (p-value)</strong>.</p>
+<pre class="r"><code>print(&quot;Enable Cytoscape option to see this results.&quot;)</code></pre>
+<pre class="r"><code>if(n_edge != 0){
+  knitr::include_graphics(paste0(&quot;assets/network_FC_pvalue_&quot;, test, &quot;.png&quot;),  error = F)
+}else{
+  print(&quot;NOT enough data.&quot;)
+}</code></pre>
+<p><img src="assets/network_FC_pvalue_OVCAR_CD73_sph_vs_OVCAR_WT_sph.png" width="150%" height="150%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cytoscape-enrichmentmap" class="section level3">
+<h3><strong>6.2. Cytoscape EnrichmentMap</strong></h3>
+<p>An <strong>enrichment map</strong> is a different sort of network. Instead of nodes representing genes, nodes represent pathways or functions. Edges between these pathways or functions represent shared genes or pathway crosstalk. An enrichment map is a way to visualize your enrichment results to help reduce redundancy and uncover main themes.</p>
+<pre class="r"><code>print(&quot;Enable Cytoscape option to see this results.&quot;)</code></pre>
+<pre class="r"><code>Gname &lt;- results %&gt;% filter(significant) %&gt;% pull(name)
+
+if(!params$Imputation){
+  
+  Uni &lt;- unique_pair(data_filt_unique, conditions = conditions, table = T) %&gt;% 
+  pull(name) %&gt;% 
+  unique()
+
+  Gname &lt;- c(Gname, Uni)
+}
+
+if(length(Gname) == 0){
+  
+  print(&quot;NOT enough data.&quot;)
+  
+}else{
+  
+  GO &lt;- gost(query = Gname, organism = &quot;hsapiens&quot;, sources = c(&quot;GO:BP&quot;, &quot;GO:MF&quot;, &quot;GO:CC&quot;, &quot;KEGG&quot;), ordered_query = T, evcodes = TRUE)
+  
+  if(is.null(GO)){
+    
+    print(&quot;NOT enough data.&quot;)
+
+    enrich_map = F
+    
+  }else{
+    
+    enrich_map = T
+    
+    gem &lt;- GO$result[,c(&quot;term_id&quot;, &quot;term_name&quot;, &quot;p_value&quot;, &quot;intersection&quot;)]
+    colnames(gem) &lt;- c(&quot;GO.ID&quot;, &quot;Description&quot;, &quot;p.Val&quot;, &quot;Genes&quot;)
+    gem$FDR &lt;- gem$p.Val
+    gem$Phenotype = &quot;+1&quot;
+    gem &lt;- gem[,c(&quot;GO.ID&quot;, &quot;Description&quot;, &quot;p.Val&quot;, &quot;FDR&quot;, &quot;Phenotype&quot;, &quot;Genes&quot;)]
+    head(gem)
+  
+    write.table(gem, here::here(&quot;output/enrichmentmap.txt&quot;),col.name=TRUE,sep=&quot;\t&quot;,row.names=FALSE,quote=FALSE)
+    
+  }
+}</code></pre>
+<pre class="r"><code>if(enrich_map){
+  knitr::include_graphics(paste0(&quot;assets/network_enrichmentmap_&quot;, test, &quot;.png&quot;),  error = F)
+}else{
+  print(&quot;NOT enough data.&quot;)
+}</code></pre>
+<p><img src="assets/network_enrichmentmap_OVCAR_CD73_sph_vs_OVCAR_WT_sph.png" width="150%" height="150%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="section" class="section level2 unnumbered">
+<h2></h2>
+<pre class="r"><code>saveWorkbook(excel, here::here(paste0(&quot;output/results_table_&quot;, test, &quot;.xlsx&quot;)), overwrite = T)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.0.3 (2020-10-10)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19042)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=Italian_Italy.1252  LC_CTYPE=Italian_Italy.1252   
+[3] LC_MONETARY=Italian_Italy.1252 LC_NUMERIC=C                  
+[5] LC_TIME=Italian_Italy.1252    
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] forcats_0.5.1               stringr_1.4.0              
+ [3] dplyr_1.0.7                 purrr_0.3.4                
+ [5] readr_1.4.0                 tidyr_1.1.3                
+ [7] tibble_3.1.2                tidyverse_1.3.1            
+ [9] openxlsx_4.2.4              here_1.0.1                 
+[11] RColorBrewer_1.1-2          RCy3_2.10.2                
+[13] STRINGdb_2.2.2              naniar_0.6.1               
+[15] visdat_0.5.3                ggrepel_0.9.1              
+[17] ggplot2_3.3.5               UpSetR_1.4.0               
+[19] ggstatsplot_0.8.0           datapasta_3.1.0            
+[21] patchwork_1.1.1             DT_0.18                    
+[23] rrvgo_1.2.0                 org.Hs.eg.db_3.12.0        
+[25] AnnotationDbi_1.52.0        gprofiler2_0.2.0           
+[27] enrichR_3.0                 preprocessCore_1.52.1      
+[29] SummarizedExperiment_1.20.0 Biobase_2.50.0             
+[31] GenomicRanges_1.42.0        GenomeInfoDb_1.26.2        
+[33] IRanges_2.24.1              S4Vectors_0.28.1           
+[35] BiocGenerics_0.36.0         MatrixGenerics_1.2.1       
+[37] matrixStats_0.59.0          DEP_1.12.0                 
+[39] MBQN_2.2.0                  workflowr_1.6.2            
+
+loaded via a namespace (and not attached):
+  [1] rappdirs_0.3.3            R.methodsS3_1.8.1        
+  [3] coda_0.19-4               bit64_4.0.5              
+  [5] knitr_1.33                DelayedArray_0.16.2      
+  [7] R.utils_2.10.1            data.table_1.14.0        
+  [9] RCurl_1.98-1.3            doParallel_1.0.16        
+ [11] generics_0.1.0            RSQLite_2.2.7            
+ [13] correlation_0.6.1         chron_2.3-56             
+ [15] bit_4.0.4                 lubridate_1.7.10         
+ [17] xml2_1.3.2                httpuv_1.6.1             
+ [19] assertthat_0.2.1          WRS2_1.1-2               
+ [21] xfun_0.24                 hms_1.1.0                
+ [23] jquerylib_0.1.4           evaluate_0.14            
+ [25] promises_1.2.0.1          fansi_0.5.0              
+ [27] readxl_1.3.1              caTools_1.18.2           
+ [29] dbplyr_2.1.1              igraph_1.2.6             
+ [31] DBI_1.1.1                 htmlwidgets_1.5.3        
+ [33] reshape_0.8.8             kSamples_1.2-9           
+ [35] Rmpfr_0.8-4               paletteer_1.3.0          
+ [37] hash_2.2.6.1              ellipsis_0.3.2           
+ [39] crosstalk_1.1.1           backports_1.2.1          
+ [41] insight_0.14.2            gridBase_0.4-7           
+ [43] vctrs_0.3.8               imputeLCMD_2.0           
+ [45] Cairo_1.5-12.2            cachem_1.0.5             
+ [47] withr_2.4.2               treemap_2.4-2            
+ [49] cluster_2.1.0             lazyeval_0.2.2           
+ [51] crayon_1.4.1              labeling_0.4.2           
+ [53] pkgconfig_2.0.3           SuppDists_1.1-9.5        
+ [55] slam_0.1-48               statsExpressions_1.1.0   
+ [57] ProtGenerics_1.22.0       wordcloud_2.6            
+ [59] rlang_0.4.11              RJSONIO_1.3-1.4          
+ [61] lifecycle_1.0.0           MatrixModels_0.5-0       
+ [63] sandwich_3.0-1            affyio_1.60.0            
+ [65] BiocFileCache_1.14.0      modelr_0.1.8             
+ [67] cellranger_1.1.0          rprojroot_2.0.2          
+ [69] graph_1.68.0              Matrix_1.2-18            
+ [71] mc2d_0.1-21               zoo_1.8-9                
+ [73] reprex_2.0.0              whisker_0.4              
+ [75] GlobalOptions_0.1.2       pheatmap_1.0.12          
+ [77] png_0.1-7                 viridisLite_0.4.0        
+ [79] rjson_0.2.20              mzR_2.24.1               
+ [81] PMCMRplus_1.9.0           parameters_0.14.0        
+ [83] bitops_1.0-7              shinydashboard_0.7.1     
+ [85] R.oo_1.24.0               KernSmooth_2.23-17       
+ [87] blob_1.2.1                shape_1.4.6              
+ [89] multcompView_0.1-8        tmvtnorm_1.4-10          
+ [91] ggsignif_0.6.2            scales_1.1.1             
+ [93] memoise_2.0.0             magrittr_2.0.1           
+ [95] plyr_1.8.6                gplots_3.1.1             
+ [97] zlibbioc_1.36.0           compiler_4.0.3           
+ [99] plotrix_3.8-1             pcaMethods_1.82.0        
+[101] clue_0.3-59               cli_3.0.0                
+[103] affy_1.68.0               XVector_0.30.0           
+[105] pbapply_1.4-3             MASS_7.3-53              
+[107] tidyselect_1.1.1          vsn_3.58.0               
+[109] stringi_1.6.2             highr_0.9                
+[111] yaml_2.2.1                GOSemSim_2.16.1          
+[113] norm_1.0-9.5              MALDIquant_1.19.3        
+[115] grid_4.0.3                sass_0.4.0               
+[117] tools_4.0.3               rstudioapi_0.13          
+[119] circlize_0.4.13           foreach_1.5.1            
+[121] git2r_0.28.0              gridExtra_2.3            
+[123] ipmisc_6.0.2              pairwiseComparisons_3.1.6
+[125] farver_2.1.0              mzID_1.28.0              
+[127] digest_0.6.27             BiocManager_1.30.16      
+[129] shiny_1.6.0               proto_1.0.0              
+[131] BWStest_0.2.2             Rcpp_1.0.6               
+[133] broom_0.7.8               BayesFactor_0.9.12-4.2   
+[135] performance_0.7.2         later_1.2.0              
+[137] ncdf4_1.17                httr_1.4.2               
+[139] MSnbase_2.15.7            ComplexHeatmap_2.6.2     
+[141] effectsize_0.4.5          colorspace_2.0-2         
+[143] rvest_1.0.0               XML_3.99-0.6             
+[145] fs_1.5.0                  rematch2_2.1.2           
+[147] gmm_1.6-6                 plotly_4.9.4.1           
+[149] xtable_1.8-4              gmp_0.6-2                
+[151] jsonlite_1.7.2            zeallot_0.1.0            
+[153] NLP_0.2-1                 R6_2.5.0                 
+[155] tm_0.7-8                  gsubfn_0.7               
+[157] pillar_1.6.1              htmltools_0.5.1.1        
+[159] mime_0.11                 glue_1.4.2               
+[161] fastmap_1.1.0             BiocParallel_1.24.1      
+[163] codetools_0.2-16          mvtnorm_1.1-2            
+[165] utf8_1.2.1                lattice_0.20-41          
+[167] bslib_0.2.5.1             sqldf_0.4-11             
+[169] curl_4.3.2                gtools_3.9.2             
+[171] zip_2.2.0                 GO.db_3.12.1             
+[173] limma_3.46.0              rmarkdown_2.9            
+[175] munsell_0.5.0             GetoptLong_1.0.5         
+[177] GenomeInfoDbData_1.2.4    iterators_1.0.13         
+[179] impute_1.64.0             haven_2.4.1              
+[181] gtable_0.3.0              bayestestR_0.10.0        </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
