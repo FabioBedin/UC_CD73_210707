@@ -8,10 +8,16 @@ editor_options:
   chunk_output_type: console
 ---
 
-# CD73 OverExpression in both OV90 and OVCAR cell lines
+# CD73 OverExpression in OV90 and OVCAR cell lines
 
 ***
 
-+ [Analysis workflow](both_cell_line.html).
++ [OVCAR CD73 vs OVCAR WT](Template_LFQ.html).
+
++ [OVCAR CD73 vs OVCAR WT](Template_LFQ_OVCAR_sph.html): Sphere.
+
++ [OV90 CD73 vs OV90 WT](Template_LFQ_OV90.html).
+
++ [OV90 CD73 vs OV90 WT](Template_LFQ_OV90_sph.html): Sphere
 
 ***

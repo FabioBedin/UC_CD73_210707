@@ -6,7 +6,7 @@ output: html_document
 
 
 ```{r librerie, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(fig.align = "center", warning=FALSE, message=FALSE, fig.height=8, fig.width=8)
+knitr::opts_chunk$set(fig.align = "center", warning=FALSE, message=FALSE, fig.height=8, fig.width=8, fig.retina = 3)
 library("MBQN")
 library("dplyr")
 library("tidyr")
@@ -31,6 +31,12 @@ library("openxlsx")
 library("org.Hs.eg.db")
 library("rrvgo")
 select <- dplyr::select
+```
+
+```{css, echo=FALSE}
+p{
+  font-size: 16px;
+}
 ```
 
 ```{r Custom Functions}
@@ -198,9 +204,19 @@ results_CAR<-get_results(dep)
 
 plot_volcano(dep, contrast=test_CAR, add_names=T,label_size=5,adjusted = F)
 
+condz <- "OVCAR"
+
 results_DEP_OVCAR <- get_df_wide(dep) %>% 
-  select(c(1:10,  Protein.names, starts_with("OVCAR"), -ends_with(c("CI.R", "CI.L")))) %>% 
-  relocate(name, Protein.IDs, Protein.names) 
+  select(c(name, Protein.IDs, Protein.names, starts_with(condz), -ends_with(c("CI.R", "CI.L")))) %>% 
+  dplyr::rename_with(., ~ gsub(pattern = paste0(test_CAR, "_"), replacement = "", .), starts_with(test_CAR)) %>% 
+  dplyr::rename_with(., ~ gsub(pattern = condz , replacement = "LFQ_intensity", .), starts_with(condz)) %>% 
+  dplyr::rename(FC = diff) %>% 
+  mutate(significant = if_else(significant, "+", "")) %>% 
+  mutate(across(c(p.adj, p.val), format, scientific = T, digits = 2)) %>% 
+  mutate(across(starts_with(c("LFQ", "FC")), .fns = ~ round(.x, digits = 2))) %>% 
+  relocate(significant) %>%
+  relocate(starts_with("LFQ"), .after = p.val) %>% 
+  arrange(desc(significant))
 ```
 
 #### OV90
@@ -228,9 +244,19 @@ results_90<-get_results(dep)
 
 plot_volcano(dep, contrast=test_90, add_names=T,label_size=5,adjusted = F)
 
+condz <- "OV90"
+
 results_DEP_OV90 <- get_df_wide(dep) %>% 
-  select(c(1:10,  Protein.names, starts_with("OV90"), -ends_with(c("CI.R", "CI.L")))) %>% 
-  relocate(name, Protein.IDs, Protein.names)
+  select(c(name, Protein.IDs, Protein.names, starts_with(condz), -ends_with(c("CI.R", "CI.L")))) %>% 
+  dplyr::rename_with(., ~ gsub(pattern = paste0(test_90, "_"), replacement = "", .), starts_with(test_90)) %>% 
+  dplyr::rename_with(., ~ gsub(pattern = condz , replacement = "LFQ_intensity", .), starts_with(condz)) %>% 
+  dplyr::rename(FC = diff) %>% 
+  mutate(significant = if_else(significant, "+", "")) %>% 
+  mutate(across(c(p.adj, p.val), format, scientific = T, digits = 2)) %>% 
+  mutate(across(starts_with(c("LFQ", "FC")), .fns = ~ round(.x, digits = 2))) %>% 
+  relocate(significant) %>%
+  relocate(starts_with("LFQ"), .after = p.val) %>% 
+  arrange(desc(significant))
 ```
 
 ### Results table {.tabset .tabset-fade}
@@ -352,9 +378,33 @@ table_unique_CAR %>%
   formatStyle('unique_OVCAR_CD73', color = styleEqual(c(TRUE, FALSE), c('green', 'red'))) %>% 
   formatStyle('unique_OVCAR_WT', color = styleEqual(c(TRUE, FALSE), c('green', 'red')))
 
+table_unique_CAR_2 <- table_unique_CAR %>% 
+  pivot_longer(!c(name, unique_OVCAR_CD73, unique_OVCAR_WT), names_to = "samples", values_to = "intensity") %>% 
+  mutate(cond = gsub(pattern = "..$", "", samples)) %>% 
+  mutate(intensity = case_when(is.na(intensity) ~ 0, TRUE ~ as.numeric(1))) %>%
+  group_by(name, cond) %>% 
+  mutate(Unique_3_out_of_4 = case_when(sum(intensity) == 3 ~ "+")) %>% 
+  mutate(Unique_4_out_of_4 = case_when(sum(intensity) == 4 ~ "+")) %>% 
+  ungroup() %>% 
+  select(-cond) %>% 
+  group_by(name) %>% 
+  fill(Unique_3_out_of_4, .direction = "downup") %>% 
+  fill(Unique_4_out_of_4, .direction = "downup") %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = samples, values_from = intensity) %>% 
+  select(name, Unique_3_out_of_4, Unique_4_out_of_4) %>% 
+  mutate(across(starts_with("Unique_"), ~ case_when(is.na(.x) ~ "", TRUE ~ as.character(.x))))
+
+condz <- "OVCAR"
+
 result_unique_OVCAR <- get_df_wide(data_filt_CAR) %>% 
   select(c(name, Protein.IDs, Protein.names)) %>% 
-  right_join(table_unique_CAR) 
+  right_join(table_unique_CAR) %>% 
+  left_join(table_unique_CAR_2) %>% 
+  dplyr::rename_with(., ~ gsub(pattern = condz , replacement = "LFQ_intensity", .), starts_with(condz)) %>% 
+  mutate(unique_OVCAR_CD73 = if_else(unique_OVCAR_CD73, "+", "")) %>% 
+  mutate(unique_OVCAR_WT = if_else(unique_OVCAR_WT, "+", "")) %>% 
+  mutate(across(starts_with("LFQ"), .fns = ~ round(.x, digits = 2)))
 ```
 
 ### OV90
@@ -388,15 +438,31 @@ unique_2 <- assay(data_filt_90) %>%
   pull(rowname) %>%
   unique()
 
-table_unique_90 <- assay(data_filt_90) %>% 
+table_unique_90 <- assay(data_filt_90) %>%
   as.data.frame() %>% 
   rownames_to_column() %>% 
   mutate(!!paste0("unique_", conditions_90[2]) := rowname %in% unique_1) %>% 
   mutate(!!paste0("unique_", conditions_90[1]) := rowname %in% unique_2) %>% 
   filter(get(paste0("unique_", conditions_90[1])) | get(paste0("unique_", conditions_90[2]))) %>% 
   relocate(where(is.logical), .after = where(is.character)) %>% 
-  dplyr::rename(name = rowname)
+  dplyr::rename(name = rowname) 
 
+table_unique_90_2 <- table_unique_90 %>% 
+  pivot_longer(!c(name, unique_OV90_CD73, unique_OV90_WT), names_to = "samples", values_to = "intensity") %>% 
+  mutate(cond = gsub(pattern = "..$", "", samples)) %>% 
+  mutate(intensity = case_when(is.na(intensity) ~ 0, TRUE ~ as.numeric(1))) %>%
+  group_by(name, cond) %>% 
+  mutate(Unique_3_out_of_4 = if_else(sum(intensity) == 3, "+", "")) %>% 
+  mutate(Unique_4_out_of_4 = if_else(sum(intensity) == 4, "+", "")) %>% 
+  ungroup() %>% 
+  select(-cond) %>% 
+  group_by(name) %>% 
+  fill(Unique_3_out_of_4, .direction = "downup") %>% 
+  fill(Unique_4_out_of_4, .direction = "downup") %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = samples, values_from = intensity) %>% 
+  select(name, Unique_3_out_of_4, Unique_4_out_of_4)
+  
 table_unique_90 %>% 
   select(1:3) %>%
   DT::datatable(options = list(
@@ -405,9 +471,16 @@ table_unique_90 %>%
   formatStyle('unique_OV90_CD73', color = styleEqual(c(TRUE, FALSE), c('green', 'red'))) %>% 
   formatStyle('unique_OV90_WT', color = styleEqual(c(TRUE, FALSE), c('green', 'red')))
 
-result_unique_OV90 <- get_df_wide(data_filt_90) %>% 
+condz <- "OV90"
+
+result_unique_OV90 <- get_df_wide(data_filt_90) %>%
   select(c(name, Protein.IDs, Protein.names)) %>% 
-  right_join(table_unique_90)
+  right_join(table_unique_90) %>% 
+  left_join(table_unique_90_2) %>% 
+  dplyr::rename_with(., ~ gsub(pattern = condz , replacement = "LFQ_intensity", .), starts_with(condz)) %>% 
+  mutate(unique_OV90_CD73 = if_else(unique_OV90_CD73, "+", "")) %>% 
+  mutate(unique_OV90_WT = if_else(unique_OV90_WT, "+", "")) %>% 
+  mutate(across(starts_with("LFQ"), .fns = ~ round(.x, digits = 2)))
 ```
 
 
@@ -590,28 +663,88 @@ GO$result %>%
 ## {-}
 
 
-```{r}
-#final_table <- get_df_wide(dep)
-#write.table(final_table, file = "results_table.txt", quote = F, sep = "\t", row.names = F, col.names = T)
+```{r excel_output}
+header_style <- createStyle(
+  fontSize = 12,
+  fontColour = "#0f0f0f",
+  fgFill = "#faf2ca",
+  halign = "center",
+  border = "TopBottomLeftRight"
+)
+
+body_style <- createStyle(
+  halign = "center",
+  border = "TopBottomLeftRight"
+)
 
 excel <- createWorkbook()
 
-addWorksheet(excel, sheetName = "ProteinGroups_OVCAR")
+## sheet1
 
-writeDataTable(excel, sheet = "ProteinGroups_OVCAR", x = results_DEP_OVCAR)
+addWorksheet(excel, sheetName = "OVCAR_CD73_vs_WT", gridLines = F)
 
-addWorksheet(excel, sheetName = "Unique_OVCAR")
+writeDataTable(excel, sheet = "OVCAR_CD73_vs_WT", x = results_DEP_OVCAR, keepNA = T, na.string = "NaN")
 
-writeDataTable(excel, sheet = "Unique_OVCAR", x = result_unique_OVCAR)
+n_row <- results_DEP_OVCAR %>% nrow() + 1
 
-addWorksheet(excel, sheetName = "ProteinGroups_OV90")
+n_col <- results_DEP_OVCAR %>% ncol()
 
-writeDataTable(excel, sheet = "ProteinGroups_OV90", x = results_DEP_OV90)
+setColWidths(excel, sheet = "OVCAR_CD73_vs_WT", cols = 1:n_col, widths = 21)
 
-addWorksheet(excel, sheetName = "Unique_OV90")
+addStyle(excel, sheet = "OVCAR_CD73_vs_WT", style = header_style, rows = 1, cols = 1:n_col, gridExpand = T)
 
-writeDataTable(excel, sheet = "Unique_OV90", x = result_unique_OV90)
+addStyle(excel, sheet = "OVCAR_CD73_vs_WT", style = body_style, rows = 2:n_row, cols = 1:n_col, gridExpand = T)
 
-saveWorkbook(excel, here::here("output/results_UC_CD73_210709.xlsx"), overwrite = T)
+## sheet2
+
+addWorksheet(excel, sheetName = "Unique_OVCAR", gridLines = F)
+
+writeDataTable(excel, sheet = "Unique_OVCAR", x = result_unique_OVCAR, keepNA = T, na.string = "NaN")
+
+n_row <- result_unique_OVCAR %>% nrow() + 1
+
+n_col <- result_unique_OVCAR %>% ncol()
+
+setColWidths(excel, sheet = "Unique_OVCAR", cols = 1:n_col, widths = 21)
+
+addStyle(excel, sheet = "Unique_OVCAR", style = header_style, rows = 1, cols = 1:n_col, gridExpand = T)
+
+addStyle(excel, sheet = "Unique_OVCAR", style = body_style, rows = 2:n_row, cols = 1:n_col, gridExpand = T)
+
+## sheet3
+
+addWorksheet(excel, sheetName = "OV90_CD73_vs_WT", gridLines = F)
+
+writeDataTable(excel, sheet = "OV90_CD73_vs_WT", x = results_DEP_OV90, keepNA = T, na.string = "NaN")
+
+n_row <- results_DEP_OV90 %>% nrow() + 1
+
+n_col <- results_DEP_OV90 %>% ncol()
+
+setColWidths(excel, sheet = "OV90_CD73_vs_WT", cols = 1:n_col, widths = 21)
+
+addStyle(excel, sheet = "OV90_CD73_vs_WT", style = header_style, rows = 1, cols = 1:n_col, gridExpand = T)
+
+addStyle(excel, sheet = "OV90_CD73_vs_WT", style = body_style, rows = 2:n_row, cols = 1:n_col, gridExpand = T)
+
+## sheet4
+
+addWorksheet(excel, sheetName = "Unique_OV90", gridLines = F)
+
+writeDataTable(excel, sheet = "Unique_OV90", x = result_unique_OV90, keepNA = T, na.string = "NaN")
+
+n_row <- result_unique_OV90 %>% nrow() + 1
+
+n_col <- result_unique_OV90 %>% ncol()
+
+setColWidths(excel, sheet = "Unique_OV90", cols = 1:n_col, widths = 21)
+
+addStyle(excel, sheet = "Unique_OV90", style = header_style, rows = 1, cols = 1:n_col, gridExpand = T)
+
+addStyle(excel, sheet = "Unique_OV90", style = body_style, rows = 2:n_row, cols = 1:n_col, gridExpand = T)
+
+## save
+
+saveWorkbook(excel, here::here("output/results_UC_CD73_210716.xlsx"), overwrite = T)
 ```
 
