@@ -382,7 +382,7 @@ div.tocify {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -391,7 +391,7 @@ div.tocify {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -400,10 +400,10 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-09-28
+<strong>Last updated:</strong> 2021-10-01
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>UC_CD73_210707/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -419,12 +419,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -491,16 +491,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomFabioBedinUCCD73210707tree1ab726ab857aaf734d6fd5e363709251fc649700targetblank1ab726aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/FabioBedin/UC_CD73_210707/tree/1ab726ab857aaf734d6fd5e363709251fc649700" target="_blank">1ab726a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomFabioBedinUCCD73210707tree35d7982f8c65443086a0b01ab60b40b5c378b61btargetblank35d7982a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/FabioBedin/UC_CD73_210707/tree/35d7982f8c65443086a0b01ab60b40b5c378b61b" target="_blank">35d7982</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomFabioBedinUCCD73210707tree1ab726ab857aaf734d6fd5e363709251fc649700targetblank1ab726aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomFabioBedinUCCD73210707tree35d7982f8c65443086a0b01ab60b40b5c378b61btargetblank35d7982a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/FabioBedin/UC_CD73_210707/tree/1ab726ab857aaf734d6fd5e363709251fc649700" target="_blank">1ab726a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/FabioBedin/UC_CD73_210707/tree/35d7982f8c65443086a0b01ab60b40b5c378b61b" target="_blank">35d7982</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -531,6 +531,13 @@ Untracked files:
     Untracked:  output/results_table_OVCAR_CD73_vs_OVCAR_WT.xlsx
     Untracked:  results_table.txt
     Untracked:  results_table.zip
+
+Unstaged changes:
+    Modified:   analysis/Template_LFQ.Rmd
+    Modified:   analysis/Template_LFQ_OV90.Rmd
+    Modified:   analysis/Template_LFQ_OV90_sph.Rmd
+    Modified:   analysis/Template_LFQ_OVCAR_sph.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -569,6 +576,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/FabioBedin/UC_CD73_210707/35d7982f8c65443086a0b01ab60b40b5c378b61b/docs/Template_LFQ_OV90_sph.html" target="_blank">35d7982</a>
+</td>
+<td>
+FabioBedin
+</td>
+<td>
+2021-09-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -655,7 +679,7 @@ if(max(expdesign$replicate)&lt;=3){
      } else if(max(expdesign$replicate)&lt;6){
        threshold&lt;-1
      } else if (max(expdesign$replicate)&gt;=6){
-       threshold&lt;-trunc(max(expdesign$replicate)/2)
+       threshold&lt;-trunc(max(expdesign$replicate)*0.25) ## 0.25 serve per avere sempre il 75% di valid vales
      }
 
 data_filt &lt;- filter_missval(data_se, thr = threshold)</code></pre>
@@ -666,8 +690,21 @@ data_filt &lt;- filter_missval(data_se, thr = threshold)</code></pre>
 <div id="introduction" class="section level1">
 <h1><strong>Introduction</strong></h1>
 <p>First, we need to wrangling the original dataset. From the <strong>proteinGroups</strong> obtained by <a href="https://www.maxquant.org/">MaxQuant</a> software, I remove proteins that are marked form the software as potential contaminant, only identify by site and reverse.<br />
-We che also filter the initial datasets by excluding all proteins identified by less than 2 peptides. (default behavior)<br />
-Now, we generate some quality control plots to investigate the structure of the dataset and observe the effect of filters. (aggiungere il tipo di filtro che faccio)</p>
+We che also filter the initial datasets by excluding all proteins identified by less than 2 peptides.<br />
+Now, we generate some quality control plots to investigate the structure of the dataset and observe the effect of filters.</p>
+<div id="normalization-strategy" class="section level4">
+<h4><strong>Normalization strategy:</strong></h4>
+<pre class="r"><code>if(params$Normalization == &quot;VSN&quot;){
+  data_filt &lt;- normalize_vsn(data_filt)
+  print(&quot;VSN normalization is used&quot;)
+} else if(params$Normalization == &quot;MBQN&quot;){
+  data_filt &lt;- normalize_MBQN(data_filt)
+  print(&quot;MBQN normalization is used&quot;)
+} else {
+  print(&quot;Max-LFQ normalization is used&quot;)
+}</code></pre>
+<p>[1] “Max-LFQ normalization is used”</p>
+</div>
 <div id="quality-control-plots" class="section level2 tabset tabset-fade">
 <h2><strong>1. Quality control plots</strong></h2>
 <div id="proteins-per-samples" class="section level3 tabset">
@@ -837,12 +874,15 @@ results&lt;-get_results(dep)</code></pre>
   }else {
     n_value &lt;- nrow(dep)
   }
-  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = &quot;condition&quot;)
+  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = &quot;condition&quot;, label = T, label_size = 3)
 } else {
   var &lt;- apply(assay(dep), 1, sd)
   df &lt;- assay(dep)[order(var, decreasing = TRUE)[seq_len(nrow(dep))],]
   n_value &lt;- df %&gt;% as.data.frame() %&gt;% drop_na() %&gt;% nrow()
-  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = &quot;condition&quot;)
+  if(n_value &gt;= 500){
+    n_value &lt;- 500
+  }
+  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = &quot;condition&quot;, label = T, label_size = 3)
 }</code></pre>
 <p><img src="figure/Template_LFQ_OV90_sph.Rmd/PCA-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
@@ -857,10 +897,19 @@ results&lt;-get_results(dep)</code></pre>
 <pre class="r"><code>plot_volcano_2(dep, contrast=test, add_names=T, label_size=5, adjusted = F, unique_vec = uni_name)</code></pre>
 <p><img src="figure/Template_LFQ_OV90_sph.Rmd/volcano-unique-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
+<div id="correlation" class="section level4">
+<h4>Correlation</h4>
+<pre class="r"><code>plot_cor(dep, significant = TRUE, lower = 0, upper = 1, pal = &quot;Reds&quot;)</code></pre>
+<p><img src="figure/Template_LFQ_OV90_sph.Rmd/correlation-matrix-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
 <div id="cluster-heatmap" class="section level4">
 <h4>Cluster heatmap</h4>
 <p>The heatmap representation gives an overview of all significant proteins (rows) in all samples (columns). This allows to see general trends, for example if one sample or replicate is really different compared to the others. Additionally, the clustering of samples (columns) can indicate closer related samples and clustering of proteins (rows) indicates similarly behaving proteins.</p>
-<pre class="r"><code>plot_heatmap(dep, type = &quot;centered&quot;, kmeans = TRUE, k = 5, show_row_names = F, indicate = &quot;condition&quot;, col_limit = 5)</code></pre>
+<pre class="r"><code>if(results %&gt;% filter(significant) %&gt;% nrow() &lt;= 100){
+  plot_heatmap(dep, type = &quot;centered&quot;, kmeans = TRUE, k = 5, show_row_names = T, indicate = &quot;condition&quot;, col_limit = 5)
+}else {
+  plot_heatmap(dep, type = &quot;centered&quot;, kmeans = TRUE, k = 5, show_row_names = F, indicate = &quot;condition&quot;, col_limit = 5)
+}</code></pre>
 <p><img src="figure/Template_LFQ_OV90_sph.Rmd/cluster-heatmap-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 </div>
@@ -905,6 +954,7 @@ if(!params$Imputation){
 
 if(length(Gname) == 0){
   print(&quot;NOT enough data.&quot;)
+  GO &lt;- NULL
 }else{
   GO &lt;- gost(query = Gname, organism = &quot;hsapiens&quot;, sources = c(&quot;GO:BP&quot;, &quot;GO:MF&quot;, &quot;GO:CC&quot;, &quot;KEGG&quot;), ordered_query = T, evcodes = TRUE)
   if(is.null(GO)){
@@ -914,7 +964,7 @@ if(length(Gname) == 0){
   }
 }</code></pre>
 <div id="htmlwidget-69b5ed4906484ed42468" style="width:960px;height:768px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-69b5ed4906484ed42468">{"x":{"data":[{"x":[79.5410078059325,102.509028315186,131.806326647411],"y":[1.80702412914233,1.73025411888628,1.63900976672647],"text":["GO:0002478 (175) <br> antigen processing and presentation of exogenous peptide antigen <br> 1.559e-02","GO:0019884 (183) <br> antigen processing and presentation of exogenous antigen <br> 1.861e-02","GO:0048002 (193) <br> antigen processing and presentation of peptide antigen <br> 2.296e-02"],"key":["GO:0002478","GO:0019884","GO:0048002"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[8.82845516707922,9.2577639391813,9.72849878822324],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedDatafcd62a0d","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[57.0074343704768],"y":[1.70350978567111],"text":"GO:0012505 (4651) <br> endomembrane system <br> 1.979e-02","key":["GO:0012505"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":22.6771653543307,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedDatafcd62a0d","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[26.9281082848288],"y":[1.32914541682236],"text":"GO:0036094 (2516) <br> small molecule binding <br> 4.687e-02","key":["GO:0036094"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":20.9551121017119,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedDatafcd62a0d","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[198.913241994602],"y":[1.8988982520061],"text":"KEGG:04210 (136) <br> Apoptosis <br> 1.262e-02","key":["KEGG:04210"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(221,68,119,1)","opacity":0.8,"size":3.77952755905512,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(221,68,119,1)"}},"hoveron":"points","set":"SharedDatafcd62a0d","name":"KEGG","legendgroup":"KEGG","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,49.9206590071537],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[53.8226750487752,71.2217645783655],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[75.123780619987,193.971385215695],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[197.873401257316,200.003902016042],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(221,68,119,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[180],"y":[16.2],"text":"values above this threshold are capped","hovertext":"","textfont":{"size":7.55905511811024,"color":"rgba(190,190,190,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,210],"y":[16,16],"text":"","type":"scatter","mode":"lines","line":{"width":0.755905511811024,"color":"rgba(190,190,190,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":51.8931100989696,"l":61.0377750103778},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP","KEGG"],"tickvals":[25.9603295035768,62.5222198135703,134.547582917841,198.938651636679],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP","KEGG"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,18.5],"tickmode":"array","ticktext":["0","2","4","6","8","10","12","14",">16"],"tickvals":[0,2,4,6,8,10,12,14,16],"categoryorder":"array","categoryarray":["0","2","4","6","8","10","12","14",">16"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":-0.0108706932337069,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis"},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"1ec463004f2c":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"1ec41b66555e":{"x":{},"xend":{},"y":{},"yend":{}},"1ec455183dd7":{"x":{},"xend":{},"y":{},"yend":{}},"1ec42fcc3f08":{"x":{},"xend":{},"y":{},"yend":{}},"1ec417a058b1":{"x":{},"xend":{},"y":{},"yend":{}},"1ec43dea6c6d":{"x":{},"y":{}},"1ec45b2bb7":{"yintercept":{}}},"cur_data":"1ec463004f2c","visdat":{"1ec463004f2c":["function (y) ","x"],"1ec41b66555e":["function (y) ","x"],"1ec455183dd7":["function (y) ","x"],"1ec42fcc3f08":["function (y) ","x"],"1ec417a058b1":["function (y) ","x"],"1ec43dea6c6d":["function (y) ","x"],"1ec45b2bb7":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDatafcd62a0d"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-69b5ed4906484ed42468">{"x":{"data":[{"x":[79.5410078059325,102.509028315186,131.806326647411],"y":[1.80702412914233,1.73025411888628,1.63900976672647],"text":["GO:0002478 (175) <br> antigen processing and presentation of exogenous peptide antigen <br> 1.559e-02","GO:0019884 (183) <br> antigen processing and presentation of exogenous antigen <br> 1.861e-02","GO:0048002 (193) <br> antigen processing and presentation of peptide antigen <br> 2.296e-02"],"key":["GO:0002478","GO:0019884","GO:0048002"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[8.82845516707922,9.2577639391813,9.72849878822324],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedDatafcd62a0d","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[57.0074343704768],"y":[1.70350978567111],"text":"GO:0012505 (4651) <br> endomembrane system <br> 1.979e-02","key":["GO:0012505"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":22.6771653543307,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedDatafcd62a0d","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[26.9281082848288],"y":[1.32914541682236],"text":"GO:0036094 (2516) <br> small molecule binding <br> 4.687e-02","key":["GO:0036094"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":20.9551121017119,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedDatafcd62a0d","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[198.913241994602],"y":[1.8988982520061],"text":"KEGG:04210 (136) <br> Apoptosis <br> 1.262e-02","key":["KEGG:04210"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(221,68,119,1)","opacity":0.8,"size":3.77952755905512,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(221,68,119,1)"}},"hoveron":"points","set":"SharedDatafcd62a0d","name":"KEGG","legendgroup":"KEGG","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,49.9206590071537],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[53.8226750487752,71.2217645783655],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[75.123780619987,193.971385215695],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[197.873401257316,200.003902016042],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(221,68,119,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[180],"y":[16.2],"text":"values above this threshold are capped","hovertext":"","textfont":{"size":7.55905511811024,"color":"rgba(190,190,190,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,210],"y":[16,16],"text":"","type":"scatter","mode":"lines","line":{"width":0.755905511811024,"color":"rgba(190,190,190,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":51.8931100989696,"l":61.0377750103778},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP","KEGG"],"tickvals":[25.9603295035768,62.5222198135703,134.547582917841,198.938651636679],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP","KEGG"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,18.5],"tickmode":"array","ticktext":["0","2","4","6","8","10","12","14",">16"],"tickvals":[0,2,4,6,8,10,12,14,16],"categoryorder":"array","categoryarray":["0","2","4","6","8","10","12","14",">16"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":-0.0108706932337069,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis"},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"2cc01f36635c":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"2cc07c50124b":{"x":{},"xend":{},"y":{},"yend":{}},"2cc055e9ee5":{"x":{},"xend":{},"y":{},"yend":{}},"2cc03de97285":{"x":{},"xend":{},"y":{},"yend":{}},"2cc0490f5584":{"x":{},"xend":{},"y":{},"yend":{}},"2cc06249847":{"x":{},"y":{}},"2cc01dc21db6":{"yintercept":{}}},"cur_data":"2cc01f36635c","visdat":{"2cc01f36635c":["function (y) ","x"],"2cc07c50124b":["function (y) ","x"],"2cc055e9ee5":["function (y) ","x"],"2cc03de97285":["function (y) ","x"],"2cc0490f5584":["function (y) ","x"],"2cc06249847":["function (y) ","x"],"2cc01dc21db6":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDatafcd62a0d"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="table-results" class="section level4">
 <h4>Table results</h4>
@@ -924,7 +974,7 @@ if(length(Gname) == 0){
 }else{
   GO$result %&gt;% 
     as.data.frame() %&gt;% 
-    select(starts_with(c(&quot;source&quot;, &quot;term_name&quot;, &quot;p_value&quot;, &quot;term_size&quot;, &quot;intersection_size&quot;))) %&gt;% 
+    select(starts_with(c(&quot;source&quot;, &quot;term_name&quot;, &quot;p_value&quot;, &quot;term_size&quot;, &quot;intersection_size&quot;))) %&gt;%
     arrange(p_value) %&gt;%  
     mutate(p_value = format(p_value, scientific = T, digits = 2)) %&gt;% 
     DT::datatable(options = list(
@@ -1037,6 +1087,7 @@ if(!params$Imputation){
 
 if(length(Gname) == 0){
   print(&quot;NOT enough data.&quot;)
+  GO &lt;- NULL
 }else{
   GO &lt;- gost(query = Gname, organism = &quot;hsapiens&quot;, sources = c(&quot;GO:BP&quot;, &quot;GO:MF&quot;, &quot;GO:CC&quot;, &quot;KEGG&quot;), ordered_query = T, evcodes = TRUE)
   if(is.null(GO)){
@@ -1046,7 +1097,7 @@ if(length(Gname) == 0){
   }
 }</code></pre>
 <div id="htmlwidget-2053a2454929a56e939b" style="width:960px;height:768px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2053a2454929a56e939b">{"x":{"data":[{"x":[58.2095248987661,55.3213853178112,62.1397364636601],"y":[1.74029471614088,1.474495850447,1.39721042237239],"text":["GO:0030667 (308) <br> secretory granule membrane <br> 1.818e-02","GO:0005737 (11951) <br> cytoplasm <br> 3.354e-02","GO:0043231 (12046) <br> intracellular membrane-bounded organelle <br> 4.007e-02"],"key":["GO:0030667","GO:0005737","GO:0043231"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[18.5367910928176,22.6692018834104,22.6771653543307],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedDatad1ba32e0","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[26.9593269551918,30.2411896770986,26.9554246213964,30.2255803419172,30.8811724195394,30.8928794209256,33.8274344350444],"y":[1.76271531593631,1.76271531593631,1.46168532027277,1.46168532027277,1.46168532027277,1.46168532027277,1.46168532027277],"text":["GO:0036131 (1) <br> prostaglandin D2 11-ketoreductase activity <br> 1.727e-02","GO:0045703 (1) <br> ketoreductase activity <br> 1.727e-02","GO:0036130 (2) <br> prostaglandin H2 endoperoxidase reductase activity <br> 3.454e-02","GO:0045550 (2) <br> geranylgeranyl reductase activity <br> 3.454e-02","GO:0047017 (2) <br> prostaglandin-F synthase activity <br> 3.454e-02","GO:0047020 (2) <br> 15-hydroxyprostaglandin-D dehydrogenase (NADP+) activity <br> 3.454e-02","GO:0047787 (2) <br> delta4-3-oxosteroid 5beta-reductase activity <br> 3.454e-02"],"key":["GO:0036131","GO:0045703","GO:0036130","GO:0045550","GO:0047017","GO:0047020","GO:0047787"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[3.77952755905512,3.77952755905512,8.91212816724189,8.91212816724189,8.91212816724189,8.91212816724189,8.91212816724189],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedDatad1ba32e0","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,49.9206590071537],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[53.8226750487752,71.2217645783655],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[75.123780619987,193.971385215695],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[197.873401257316,200.003902016042],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(221,68,119,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[180],"y":[16.2],"text":"values above this threshold are capped","hovertext":"","textfont":{"size":7.55905511811024,"color":"rgba(190,190,190,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,210],"y":[16,16],"text":"","type":"scatter","mode":"lines","line":{"width":0.755905511811024,"color":"rgba(190,190,190,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":51.8931100989696,"l":61.0377750103778},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP","KEGG"],"tickvals":[25.9603295035768,62.5222198135703,134.547582917841,198.938651636679],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP","KEGG"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,18.5],"tickmode":"array","ticktext":["0","2","4","6","8","10","12","14",">16"],"tickvals":[0,2,4,6,8,10,12,14,16],"categoryorder":"array","categoryarray":["0","2","4","6","8","10","12","14",">16"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":-0.0108706932337069,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis"},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"1ec4104278fe":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"1ec479a87e8a":{"x":{},"xend":{},"y":{},"yend":{}},"1ec46a5f4fd7":{"x":{},"xend":{},"y":{},"yend":{}},"1ec45641287a":{"x":{},"xend":{},"y":{},"yend":{}},"1ec45eda2113":{"x":{},"xend":{},"y":{},"yend":{}},"1ec4577b3ac4":{"x":{},"y":{}},"1ec41f225f66":{"yintercept":{}}},"cur_data":"1ec4104278fe","visdat":{"1ec4104278fe":["function (y) ","x"],"1ec479a87e8a":["function (y) ","x"],"1ec46a5f4fd7":["function (y) ","x"],"1ec45641287a":["function (y) ","x"],"1ec45eda2113":["function (y) ","x"],"1ec4577b3ac4":["function (y) ","x"],"1ec41f225f66":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDatad1ba32e0"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-2053a2454929a56e939b">{"x":{"data":[{"x":[58.2095248987661,55.3213853178112,62.1397364636601],"y":[1.74029471614088,1.474495850447,1.39721042237239],"text":["GO:0030667 (308) <br> secretory granule membrane <br> 1.818e-02","GO:0005737 (11951) <br> cytoplasm <br> 3.354e-02","GO:0043231 (12046) <br> intracellular membrane-bounded organelle <br> 4.007e-02"],"key":["GO:0030667","GO:0005737","GO:0043231"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[18.5367910928176,22.6692018834104,22.6771653543307],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedDatad1ba32e0","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[26.9593269551918,30.2411896770986,26.9554246213964,30.2255803419172,30.8811724195394,30.8928794209256,33.8274344350444],"y":[1.76271531593631,1.76271531593631,1.46168532027277,1.46168532027277,1.46168532027277,1.46168532027277,1.46168532027277],"text":["GO:0036131 (1) <br> prostaglandin D2 11-ketoreductase activity <br> 1.727e-02","GO:0045703 (1) <br> ketoreductase activity <br> 1.727e-02","GO:0036130 (2) <br> prostaglandin H2 endoperoxidase reductase activity <br> 3.454e-02","GO:0045550 (2) <br> geranylgeranyl reductase activity <br> 3.454e-02","GO:0047017 (2) <br> prostaglandin-F synthase activity <br> 3.454e-02","GO:0047020 (2) <br> 15-hydroxyprostaglandin-D dehydrogenase (NADP+) activity <br> 3.454e-02","GO:0047787 (2) <br> delta4-3-oxosteroid 5beta-reductase activity <br> 3.454e-02"],"key":["GO:0036131","GO:0045703","GO:0036130","GO:0045550","GO:0047017","GO:0047020","GO:0047787"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[3.77952755905512,3.77952755905512,8.91212816724189,8.91212816724189,8.91212816724189,8.91212816724189,8.91212816724189],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedDatad1ba32e0","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,49.9206590071537],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[53.8226750487752,71.2217645783655],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[75.123780619987,193.971385215695],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[197.873401257316,200.003902016042],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(221,68,119,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[180],"y":[16.2],"text":"values above this threshold are capped","hovertext":"","textfont":{"size":7.55905511811024,"color":"rgba(190,190,190,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,210],"y":[16,16],"text":"","type":"scatter","mode":"lines","line":{"width":0.755905511811024,"color":"rgba(190,190,190,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":51.8931100989696,"l":61.0377750103778},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP","KEGG"],"tickvals":[25.9603295035768,62.5222198135703,134.547582917841,198.938651636679],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP","KEGG"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,18.5],"tickmode":"array","ticktext":["0","2","4","6","8","10","12","14",">16"],"tickvals":[0,2,4,6,8,10,12,14,16],"categoryorder":"array","categoryarray":["0","2","4","6","8","10","12","14",">16"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":-0.0108706932337069,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis"},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"2cc08cba88":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"2cc04d855703":{"x":{},"xend":{},"y":{},"yend":{}},"2cc02aa651eb":{"x":{},"xend":{},"y":{},"yend":{}},"2cc0406655a0":{"x":{},"xend":{},"y":{},"yend":{}},"2cc05d225b65":{"x":{},"xend":{},"y":{},"yend":{}},"2cc0710f71a9":{"x":{},"y":{}},"2cc034975d5f":{"yintercept":{}}},"cur_data":"2cc08cba88","visdat":{"2cc08cba88":["function (y) ","x"],"2cc04d855703":["function (y) ","x"],"2cc02aa651eb":["function (y) ","x"],"2cc0406655a0":["function (y) ","x"],"2cc05d225b65":["function (y) ","x"],"2cc0710f71a9":["function (y) ","x"],"2cc034975d5f":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDatad1ba32e0"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="table-results-1" class="section level4">
 <h4>Table results</h4>
@@ -1174,11 +1225,11 @@ scatterPlot(simMatrix, reducedTerms, size = &quot;score&quot;, labelSize = 5)
 <p>Cytoscape is an open source software platform for visualizing complex networks and integrating these with any type of attribute data. In this presentation all proteins showing at least one confidence level from the STRING database are shown. The <strong>color</strong> code is relative to <strong>fold change</strong> and the <strong>size</strong> is directly proportional to the <strong>significance (p-value)</strong>.</p>
 <pre class="r"><code>print(&quot;Enable Cytoscape option to see this results.&quot;)</code></pre>
 <pre class="r"><code>if(n_edge != 0){
-  knitr::include_graphics(paste0(&quot;assets/network_FC_pvalue_&quot;, test, &quot;.png&quot;),  error = F)
+  knitr::include_graphics(&quot;assets/network_FC_pvalue.png&quot;,  error = F)
 }else{
   print(&quot;NOT enough data.&quot;)
 }</code></pre>
-<p><img src="assets/network_FC_pvalue_OV90_CD73_sph_vs_OV90_WT_sph.png" width="150%" height="150%" style="display: block; margin: auto;" /></p>
+<p><img src="assets/network_FC_pvalue.png" width="150%" height="150%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="cytoscape-enrichmentmap" class="section level3">
 <h3><strong>6.2. Cytoscape EnrichmentMap</strong></h3>
@@ -1225,11 +1276,11 @@ if(length(Gname) == 0){
   }
 }</code></pre>
 <pre class="r"><code>if(enrich_map){
-  knitr::include_graphics(paste0(&quot;assets/network_enrichmentmap_&quot;, test, &quot;.png&quot;),  error = F)
+  knitr::include_graphics(&quot;assets/network_enrichmentmap.png&quot;,  error = F)
 }else{
   print(&quot;NOT enough data.&quot;)
 }</code></pre>
-<p><img src="assets/network_enrichmentmap_OV90_CD73_sph_vs_OV90_WT_sph.png" width="150%" height="150%" style="display: block; margin: auto;" /></p>
+<p><img src="assets/network_enrichmentmap.png" width="150%" height="150%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="section" class="section level2 unnumbered">

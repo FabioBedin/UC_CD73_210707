@@ -43,7 +43,6 @@ params:
   Imputation: TRUE
   Cytoscape: TRUE
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.align = "center", warning=FALSE, message=FALSE, fig.height=8, fig.width=10)
 ```
@@ -136,11 +135,12 @@ if(max(expdesign$replicate)<=3){
      } else if(max(expdesign$replicate)<6){
        threshold<-1
      } else if (max(expdesign$replicate)>=6){
-       threshold<-trunc(max(expdesign$replicate)/2)
+       threshold<-trunc(max(expdesign$replicate)*0.25) ## 0.25 serve per avere sempre il 75% di valid vales
      }
 
 data_filt <- filter_missval(data_se, thr = threshold)
 ```
+
 
 # **`r cond_1`** vs **`r cond_2`**
 
@@ -148,9 +148,23 @@ data_filt <- filter_missval(data_se, thr = threshold)
 
 # **Introduction**
 
-First, we need to wrangling the original dataset. From the **proteinGroups** obtained by [MaxQuant](https://www.maxquant.org/) software, I remove proteins that are marked form the software as potential contaminant, only identify by site and reverse.  
-We che also filter the initial datasets by excluding all proteins identified by less than 2 peptides. (default behavior)  
-Now, we generate some quality control plots to investigate the structure of the dataset and observe the effect of filters. (aggiungere il tipo di filtro che faccio)
+First, we need to wrangling the original dataset. From the **proteinGroups** obtained by [MaxQuant](https://www.maxquant.org/) software, I remove proteins that are marked form the software as potential contaminant, only identify by site and reverse.   
+We che also filter the initial datasets by excluding all proteins identified by less than `r params$n_peptides` peptides.   
+Now, we generate some quality control plots to investigate the structure of the dataset and observe the effect of filters.    
+  
+#### **Normalization strategy:**   
+
+```{r normalization, results = 'asis'}
+if(params$Normalization == "VSN"){
+  data_filt <- normalize_vsn(data_filt)
+  print("VSN normalization is used")
+} else if(params$Normalization == "MBQN"){
+  data_filt <- normalize_MBQN(data_filt)
+  print("MBQN normalization is used")
+} else {
+  print("Max-LFQ normalization is used")
+}
+```
 
 ## **1. Quality control plots** {.tabset .tabset-fade}
 
@@ -356,12 +370,15 @@ if(params$Imputation){
   }else {
     n_value <- nrow(dep)
   }
-  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = "condition")
+  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = "condition", label = T, label_size = 3)
 } else {
   var <- apply(assay(dep), 1, sd)
   df <- assay(dep)[order(var, decreasing = TRUE)[seq_len(nrow(dep))],]
   n_value <- df %>% as.data.frame() %>% drop_na() %>% nrow()
-  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = "condition")
+  if(n_value >= 500){
+    n_value <- 500
+  }
+  plot_pca(dep, x = 1, y = 2, n = n_value, point_size = 4, indicate = "condition", label = T, label_size = 3)
 }
 ```
 
@@ -379,12 +396,22 @@ plot_volcano(dep, contrast=test, add_names=T, label_size=5, adjusted = F)
 plot_volcano_2(dep, contrast=test, add_names=T, label_size=5, adjusted = F, unique_vec = uni_name)
 ```
 
+#### `r if(params$Imputation){"Correlation"}`
+
+```{r correlation-matrix, eval=params$Imputation, include=params$Imputation}
+plot_cor(dep, significant = TRUE, lower = 0, upper = 1, pal = "Reds")
+```
+
 #### `r if(params$Imputation){"Cluster heatmap"}`
 
 `r if(params$Imputation){"The heatmap representation gives an overview of all significant proteins (rows) in all samples (columns). This allows to see general trends, for example if one sample or replicate is really different compared to the others. Additionally, the clustering of samples (columns) can indicate closer related samples and clustering of proteins (rows) indicates similarly behaving proteins."}`
 
 ```{r cluster-heatmap, eval=params$Imputation, include=params$Imputation}
-plot_heatmap(dep, type = "centered", kmeans = TRUE, k = 5, show_row_names = F, indicate = "condition", col_limit = 5)
+if(results %>% filter(significant) %>% nrow() <= 100){
+  plot_heatmap(dep, type = "centered", kmeans = TRUE, k = 5, show_row_names = T, indicate = "condition", col_limit = 5)
+}else {
+  plot_heatmap(dep, type = "centered", kmeans = TRUE, k = 5, show_row_names = F, indicate = "condition", col_limit = 5)
+}
 ```
 
 ### **4.2. Result table**
@@ -531,6 +558,7 @@ if(!params$Imputation){
 
 if(length(Gname) == 0){
   print("NOT enough data.")
+  GO <- NULL
 }else{
   GO <- gost(query = Gname, organism = "hsapiens", sources = c("GO:BP", "GO:MF", "GO:CC", "KEGG"), ordered_query = T, evcodes = TRUE)
   if(is.null(GO)){
@@ -551,13 +579,42 @@ if(is.null(GO)){
 }else{
   GO$result %>% 
     as.data.frame() %>% 
-    select(starts_with(c("source", "term_name", "p_value", "term_size", "intersection_size"))) %>% 
+    select(starts_with(c("source", "term_name", "p_value", "term_size", "intersection_size"))) %>%
     arrange(p_value) %>%  
     mutate(p_value = format(p_value, scientific = T, digits = 2)) %>% 
     DT::datatable(options = list(
     columnDefs = list(list(className = 'dt-center', targets = 1:6)),
     pageLength = 10)) %>%
     formatStyle('source', backgroundColor = styleEqual(c("GO:BP", "GO:MF", "GO:CC", "KEGG"), c('orange', 'tomato', 'lightgreen', 'violet')))
+}
+```
+
+```{r excel-Go-cond1, include=FALSE}
+if(!is.null(GO)){
+  go_excel <- GO$result %>% 
+      as.data.frame() %>% 
+      select(starts_with(c("significant", "source", "term_name", "p_value", "term_size", "intersection_size", "intersection"))) %>%
+      mutate(significant = if_else(significant, "+", "")) %>%
+      arrange(p_value) %>%  
+      mutate(p_value = format(p_value, scientific = T, digits = 2))
+  
+  GO1_name <- paste0("GO_", cond_1)
+  
+  addWorksheet(excel, sheetName = GO1_name, gridLines = F)
+  
+  writeDataTable(excel, sheet = GO1_name, x = go_excel, keepNA = T, na.string = "NaN")
+  
+  n_row <- go_excel %>% nrow() + 1
+  
+  n_col <- go_excel %>% ncol()
+  
+  setColWidths(excel, sheet = GO1_name, cols = 1:(n_col-1), widths = 21)
+  
+  setColWidths(excel, sheet = GO1_name, cols = n_col, widths = "auto")
+  
+  addStyle(excel, sheet = GO1_name, style = header_style, rows = 1, cols = 1:n_col, gridExpand = T)
+  
+  addStyle(excel, sheet = GO1_name, style = body_style, rows = 2:n_row, cols = 1:n_col, gridExpand = T)
 }
 ```
 
@@ -668,6 +725,7 @@ if(!params$Imputation){
 
 if(length(Gname) == 0){
   print("NOT enough data.")
+  GO <- NULL
 }else{
   GO <- gost(query = Gname, organism = "hsapiens", sources = c("GO:BP", "GO:MF", "GO:CC", "KEGG"), ordered_query = T, evcodes = TRUE)
   if(is.null(GO)){
@@ -695,6 +753,35 @@ if(is.null(GO)){
     columnDefs = list(list(className = 'dt-center', targets = 1:6)),
     pageLength = 10)) %>%
     formatStyle('source', backgroundColor = styleEqual(c("GO:BP", "GO:MF", "GO:CC", "KEGG"), c('orange', 'tomato', 'lightgreen', 'violet')))
+}
+```
+
+```{r excel-Go-cond2, include=FALSE}
+if(!is.null(GO)){
+  go_excel <- GO$result %>% 
+      as.data.frame() %>% 
+      select(starts_with(c("significant", "source", "term_name", "p_value", "term_size", "intersection_size", "intersection"))) %>%
+      mutate(significant = if_else(significant, "+", "")) %>%
+      arrange(p_value) %>%  
+      mutate(p_value = format(p_value, scientific = T, digits = 2))
+  
+  GO2_name <- paste0("GO_", cond_2)
+  
+  addWorksheet(excel, sheetName = GO2_name, gridLines = F)
+  
+  writeDataTable(excel, sheet = GO2_name, x = go_excel, keepNA = T, na.string = "NaN")
+  
+  n_row <- go_excel %>% nrow() + 1
+  
+  n_col <- go_excel %>% ncol()
+  
+  setColWidths(excel, sheet = GO2_name, cols = 1:(n_col-1), widths = 21)
+  
+  setColWidths(excel, sheet = GO2_name, cols = n_col, widths = "auto")
+  
+  addStyle(excel, sheet = GO2_name, style = header_style, rows = 1, cols = 1:n_col, gridExpand = T)
+  
+  addStyle(excel, sheet = GO2_name, style = body_style, rows = 2:n_row, cols = 1:n_col, gridExpand = T)
 }
 ```
 
@@ -898,7 +985,6 @@ if(leng_dep != 0){
     exportImage(filename = here::here("output/network_FC_pvalue.png"), 'PNG', zoom=300)
     
     file.copy(from = here::here("output/network_FC_pvalue.png"), to = here::here("docs/assets/network_FC_pvalue.png"), overwrite = T)
-    file.rename(from = here::here("docs/assets/network_FC_pvalue.png"), to = here::here(paste0("docs/assets/network_FC_pvalue_", test, ".png")))
   }else{
   print("NOT enough data.")
   }
@@ -911,7 +997,7 @@ if(leng_dep != 0){
 
 ```{r image-cytoscape, eval=params$Cytoscape, out.height= "150%", out.width= "150%"}
 if(n_edge != 0){
-  knitr::include_graphics(paste0("assets/network_FC_pvalue_", test, ".png"),  error = F)
+  knitr::include_graphics("assets/network_FC_pvalue.png",  error = F)
 }else{
   print("NOT enough data.")
 }
@@ -998,16 +1084,16 @@ if(enrich_map){
   exportImage(filename = here::here("output/network_enrichmentmap.png"), 'PNG', zoom=300)
 
   file.copy(from = here::here("output/network_enrichmentmap.png"), to = here::here("docs/assets/network_enrichmentmap.png"), overwrite = T)
-  file.rename(from = here::here("docs/assets/network_enrichmentmap.png"), to = here::here(paste0("docs/assets/network_enrichmentmap_", test, ".png")))
 
 }else{
   print("NOT enough data.")
 }
+
 ```
 
 ```{r image-cytoscape-emap, eval=params$Cytoscape, out.height= "150%", out.width= "150%"}
 if(enrich_map){
-  knitr::include_graphics(paste0("assets/network_enrichmentmap_", test, ".png"),  error = F)
+  knitr::include_graphics("assets/network_enrichmentmap.png",  error = F)
 }else{
   print("NOT enough data.")
 }

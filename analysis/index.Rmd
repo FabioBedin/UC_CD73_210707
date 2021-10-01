@@ -12,11 +12,11 @@ editor_options:
 
 ***
 
-+ [OVCAR CD73 vs OVCAR WT](Template_LFQ.html).
++ [OVCAR CD73 vs OVCAR WT](Template_LFQ.html): Adese
 
 + [OVCAR CD73 vs OVCAR WT](Template_LFQ_OVCAR_sph.html): Sphere.
 
-+ [OV90 CD73 vs OV90 WT](Template_LFQ_OV90.html).
++ [OV90 CD73 vs OV90 WT](Template_LFQ_OV90.html): Adese
 
 + [OV90 CD73 vs OV90 WT](Template_LFQ_OV90_sph.html): Sphere
 
