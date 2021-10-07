@@ -997,7 +997,7 @@ if(leng_dep != 0){
 
 ```{r image-cytoscape, eval=params$Cytoscape, out.height= "150%", out.width= "150%"}
 if(n_edge != 0){
-  knitr::include_graphics("assets/network_FC_pvalue.png",  error = F)
+  knitr::include_graphics("assets/network_FC_pvalue_OV90_CD73_sph_vs_OV90_WT_sph.png",  error = F)
 }else{
   print("NOT enough data.")
 }
@@ -1093,7 +1093,7 @@ if(enrich_map){
 
 ```{r image-cytoscape-emap, eval=params$Cytoscape, out.height= "150%", out.width= "150%"}
 if(enrich_map){
-  knitr::include_graphics("assets/network_enrichmentmap.png",  error = F)
+  knitr::include_graphics("assets/network_enrichmentmap_OV90_CD73_sph_vs_OV90_WT_sph.png",  error = F)
 }else{
   print("NOT enough data.")
 }
