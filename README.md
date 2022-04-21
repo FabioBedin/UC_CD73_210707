@@ -2,4 +2,4 @@
 
 A [workflowr][] project.
 
-[workflowr]: https://github.com/jdblischak/workflowr
+[lint to html report]: https://fabiobedin.github.io/UC_CD73_210707/
