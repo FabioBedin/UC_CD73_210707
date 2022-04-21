@@ -12,12 +12,22 @@ editor_options:
 
 ***
 
-+ [OVCAR CD73 vs OVCAR WT](Template_LFQ.html): Adese
++ [OVCAR CD73 vs OVCAR WT](Template_LFQ.html): Adese.
 
 + [OVCAR CD73 vs OVCAR WT](Template_LFQ_OVCAR_sph.html): Sphere.
 
-+ [OV90 CD73 vs OV90 WT](Template_LFQ_OV90.html): Adese
++ [OV90 CD73 vs OV90 WT](Template_LFQ_OV90.html): Adese.
 
-+ [OV90 CD73 vs OV90 WT](Template_LFQ_OV90_sph.html): Sphere
++ [OV90 CD73 vs OV90 WT](Template_LFQ_OV90_sph.html): Sphere.
 
 ***
+
+
+```{r logo, fig.align = "left"}
+knitr::include_graphics("assets/MSU_logo.png", error = F)
+```
+[**Fabio Bedin** - Software Developer]{style="float:right;position:relative;top:-6em"}  
+[**Alessandro Cuomo** - Unit Coordinator]{style="float:right;position:relative;top:-6em"}  
+[**Stefano Rizzieri** - PhD]{style="float:right;position:relative;top:-6em"} 
+
+[®2022 Istituto Europeo di Oncologia - via Ripamonti 435 Milano - P.I. 08691440153 | [MSU website](https://www.research.ieo.it/research-and-technology/technological-units/proteomics-unit/) | MSU@ieo.it]{style="float:right;position:relative;top:-2em;right: -2.5em;"}
